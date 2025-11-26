@@ -1,114 +1,140 @@
 # 🚀 Setup Guide - PalmTrack
 
-## Quick Setup (10 menit)
-
-### 1. Buat Supabase Project
-- Buka: https://supabase.com/dashboard
-- Click "New Project"
-- Isi nama & password
-- Tunggu ~2 menit
-
-### 2. Setup Database
-- Buka "SQL Editor" di Supabase
-- Copy isi file `supabase/COMPLETE_SETUP.sql`
-- Paste & Run
-- ✅ Done! (7 tables + 30+ indexes created)
-
-### 3. Get Credentials
-- Buka "Settings" → "API"
-- Copy "Project URL"
-- Copy "anon public" key
-
-### 4. Update .env.local
-Buat file `.env.local` di root project:
-```env
-NEXT_PUBLIC_SUPABASE_URL=your-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-```
-
-### 5. Run Application
-```bash
-npm install
-npm run dev
-```
-
-Buka: http://localhost:3000
-
-## Verification
-
-Cek ini untuk memastikan setup berhasil:
-
-### Database (Supabase Dashboard)
-- ✅ 7 tables: gardens, tasks, harvests, issues, maintenances, documentation, expenses
-- ✅ 30+ indexes
-
-### Application
-- ✅ npm run dev works
-- ✅ Can create garden
-- ✅ Can view detail
-- ✅ Only 1 API call per page (check Network tab)
-
-## Troubleshooting
-
-### "relation already exists"
-Database sudah ada tables. Skip atau drop tables dulu.
-
-### "permission denied"
-Pastikan menggunakan anon key yang benar.
-
-### "Failed to fetch"
-1. Cek .env.local benar
-2. Restart: `npm run dev`
-
-### Application shows "Using mock data"
-1. Cek .env.local exists
-2. Cek credentials benar (no typo)
-3. Restart dev server
-
-## Performance Features
-
-Aplikasi ini sudah dioptimasi dengan:
-- ⚡ React Query caching (automatic)
-- ⚡ Single query optimization (5 calls → 1)
-- ⚡ 30+ database indexes
-- ⚡ Loading skeletons
-- ⚡ 60% faster page loads
-
-## Tech Stack
-
-- Next.js 15 + TypeScript
-- Supabase (PostgreSQL)
-- React Query (TanStack Query)
-- Tailwind CSS + shadcn/ui
-- Recharts for charts
-
-## Project Structure
-
-```
-├── app/                    # Next.js pages
-├── components/             # React components
-├── lib/
-│   ├── hooks/             # React Query hooks
-│   └── supabase/          # Supabase API
-├── supabase/
-│   └── COMPLETE_SETUP.sql # Database setup
-└── .env.local             # Environment variables
-```
-
-## Key Files
-
-- `supabase/COMPLETE_SETUP.sql` - Database setup
-- `lib/hooks/useGardenData.ts` - React Query hooks
-- `lib/supabase/api/gardens.ts` - API functions
-- `.env.local` - Credentials
-
-## Next Steps
-
-1. Test all features
-2. Add your data
-3. Customize as needed
-4. Deploy to production
+Panduan lengkap untuk setup PalmTrack dari awal.
 
 ---
 
-**Need help?** Check README.md for detailed documentation.
+## 📋 Prerequisites
+
+- Node.js 18+
+- npm atau yarn
+- Akun Supabase (gratis)
+
+---
+
+## ⚡ Quick Setup (15 menit)
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/yourusername/palmtrack.git
+cd palmtrack
+npm install
+```
+
+### 2. Buat Supabase Project
+
+1. Buka https://supabase.com/dashboard
+2. Klik "New Project"
+3. Isi nama project dan password database
+4. Pilih region (Singapore recommended)
+5. Tunggu ~2 menit
+
+### 3. Setup Database
+
+1. Buka **SQL Editor** di Supabase Dashboard
+2. Copy isi file `supabase/COMPLETE_SETUP.sql`
+3. Paste dan klik **Run**
+4. Tunggu hingga selesai (~10 detik)
+
+### 4. Setup Storage (untuk gambar)
+
+1. Buka **SQL Editor**
+2. Copy isi file `supabase/STORAGE_SETUP.sql`
+3. Paste dan klik **Run**
+4. Buka **Storage** di sidebar
+5. Pastikan bucket `palmtrack-images` sudah ada
+
+### 5. Get API Credentials
+
+1. Buka **Settings** → **API**
+2. Copy **Project URL**
+3. Copy **anon public** key
+
+### 6. Setup Environment
+
+```bash
+cp .env.local.example .env.local
+```
+
+Edit `.env.local`:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### 7. Run Application
+
+```bash
+npm run dev
+```
+
+Buka http://localhost:3000
+
+---
+
+## ✅ Verification
+
+### Database
+- ✅ 7 tables: gardens, tasks, harvests, issues, maintenances, documentation, expenses
+- ✅ 30+ indexes untuk performance
+
+### Storage
+- ✅ Bucket `palmtrack-images` exists
+- ✅ Public access enabled
+
+### Application
+- ✅ `npm run dev` works
+- ✅ Bisa create garden
+- ✅ Bisa upload gambar
+
+---
+
+## 📱 Test di Smartphone
+
+```bash
+# Cari IP komputer
+ifconfig | grep "inet "
+
+# Buka di smartphone (pastikan satu WiFi)
+http://[IP-KAMU]:3000
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### "Supabase is not configured"
+- Cek `.env.local` sudah ada dan benar
+- Restart dev server
+
+### "relation already exists"
+- Database sudah ada tables, skip atau drop dulu
+
+### "Failed to upload image"
+- Pastikan bucket `palmtrack-images` sudah dibuat
+- Jalankan `STORAGE_SETUP.sql`
+
+### "permission denied"
+- Cek anon key benar
+- Cek storage policies sudah dibuat
+
+---
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+```bash
+npm i -g vercel
+vercel
+vercel --prod
+```
+
+Set environment variables di Vercel Dashboard.
+
+---
+
+## 📚 More Info
+
+Lihat **README.md** untuk dokumentasi lengkap.

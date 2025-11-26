@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { Garden } from "@/types";
 import { generateSlug } from "@/lib/utils";
 
@@ -38,6 +40,8 @@ interface AddGardenModalProps {
 }
 
 export default function AddGardenModal({ open, onClose, onSubmit }: AddGardenModalProps) {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  
   const {
     register,
     handleSubmit,
@@ -65,12 +69,14 @@ export default function AddGardenModal({ open, onClose, onSubmit }: AddGardenMod
   const onFormSubmit = (data: GardenFormData) => {
     // Generate slug from garden name
     const slug = generateSlug(data.nama);
-    onSubmit({ ...data, slug });
+    onSubmit({ ...data, slug, imageUrl: imageUrl || undefined } as any);
     reset();
+    setImageUrl(null);
   };
 
   const handleClose = () => {
     reset();
+    setImageUrl(null);
     onClose();
   };
 
@@ -85,6 +91,19 @@ export default function AddGardenModal({ open, onClose, onSubmit }: AddGardenMod
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+          {/* Garden Image */}
+          <div>
+            <Label>Foto Kebun</Label>
+            <ImageUpload
+              value={imageUrl}
+              onChange={setImageUrl}
+              folder={`gardens/new-${Date.now()}`}
+              aspectRatio="video"
+              placeholder="Upload foto kebun"
+              className="mt-2"
+            />
+          </div>
+
           {/* Nama Kebun */}
           <div>
             <Label htmlFor="nama">

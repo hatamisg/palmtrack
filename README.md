@@ -1,401 +1,536 @@
-# PalmTrack - Garden Planner & Management MVP
+# 🌴 PalmTrack
 
-Aplikasi web manajemen kebun kelapa sawit dengan fitur task management, harvest recording, issue tracking, maintenance scheduling, dan documentation.
+**Aplikasi Manajemen Kebun Kelapa Sawit Modern**
 
-## 🚀 Quick Start
+PalmTrack adalah aplikasi web berbasis Next.js untuk mengelola kebun kelapa sawit secara efisien. Dilengkapi dengan fitur manajemen kebun, pencatatan panen, pelacakan masalah, jadwal perawatan, dan dokumentasi foto.
 
-### Setup dengan Supabase (10 menit)
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=flat-square&logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-Database-green?style=flat-square&logo=supabase)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=flat-square&logo=tailwind-css)
 
-```bash
-# 1. Buat Supabase project di https://supabase.com
-# 2. Run supabase/COMPLETE_SETUP.sql di SQL Editor
-# 3. Copy credentials ke .env.local
-# 4. Run application
-npm install
-npm run dev
-```
+---
 
-**📖 [Detailed Setup Guide](./SETUP_GUIDE.md)**
+## ✨ Fitur Utama
 
-### Alternative: Mock Data (No Database)
+### 📊 Dashboard
+- **Ringkasan Statistik** - Total kebun, pohon, produksi, dan pendapatan
+- **Grafik Produksi** - Visualisasi tren panen bulanan
+- **Todo List** - Daftar tugas dan perawatan yang perlu dilakukan
+- **Quick Access** - Akses cepat ke semua kebun dengan thumbnail
+- **Swipe Gestures** - Geser untuk menyelesaikan atau menghapus tugas
 
-```bash
-npm install
-npm run dev
-# Visit http://localhost:3000
-```
+### 🌴 Manajemen Kebun
+- **CRUD Kebun** - Tambah, edit, hapus kebun
+- **Upload Foto Kebun** - Gambar utama untuk setiap kebun
+- **Status Monitoring** - Baik, Perlu Perhatian, Bermasalah
+- **Detail Lengkap** - Lokasi, luas, jumlah pohon, varietas, tahun tanam
 
-Aplikasi akan berjalan dengan mock data untuk testing.
+### 📈 Pencatatan Panen
+- **Input Panen** - Tanggal, jumlah (kg), harga per kg
+- **Kalkulasi Otomatis** - Total nilai panen
+- **Kualitas Panen** - Baik Sekali, Baik, Cukup, Kurang
+- **Riwayat Panen** - Timeline semua panen per kebun
 
-## ✨ Status Implementasi
+### 🐛 Pelacakan Masalah
+- **Laporan Masalah** - Judul, deskripsi, area terdampak
+- **Tingkat Keparahan** - Parah, Sedang, Ringan
+- **Upload Foto** - Dokumentasi masalah dengan multiple foto (max 5)
+- **Photo Gallery** - Lightbox untuk melihat foto detail
+- **Status Tracking** - Open → Resolved
 
-### ✅ SEMUA FASE UTAMA TELAH SELESAI! 🎉
+### 🔧 Jadwal Perawatan
+- **Jenis Perawatan** - Pemupukan, Penyemprotan, Pemangkasan, Pembersihan
+- **Penjadwalan** - Tanggal target dan penanggung jawab
+- **Recurring Tasks** - Perawatan berulang dengan interval
+- **Dokumentasi Foto** - Before/after photos (max 4)
+- **Status** - Dijadwalkan, Selesai, Terlambat
 
-**Phase 1: Setup & Layout** ✅ COMPLETED
-- ✅ Next.js 15 dengan TypeScript, Tailwind CSS
-- ✅ Komponen UI shadcn/ui lengkap (Button, Card, Badge, Input, Select, Dialog, Tabs, dll)
-- ✅ TypeScript interfaces untuk semua data models
-- ✅ Mock data comprehensive untuk 8 kebun dengan histori lengkap
-- ✅ Layout dengan Navbar responsive
+### 💰 Pencatatan Pengeluaran
+- **Kategori** - Pupuk, Pestisida, Peralatan, Tenaga Kerja, Transportasi
+- **Input Detail** - Tanggal, deskripsi, jumlah (IDR)
+- **Riwayat** - Timeline pengeluaran per kebun
 
-**Phase 2: Dashboard** ✅ COMPLETED
-- ✅ 4 Summary Cards (Total Kebun, Luas, Pohon, Task Pending)
-- ✅ Task Mendesak section dengan high-priority tasks
-- ✅ Masalah Aktif section
-- ✅ Produksi Bulan Ini bar chart (Recharts)
-- ✅ Kebun Quick Access cards
+### 📱 Mobile-First Design
+- **Responsive** - Optimal di semua ukuran layar
+- **PWA Support** - Install sebagai aplikasi native
+- **Touch Gestures** - Swipe untuk aksi cepat
+- **Offline Indicator** - Notifikasi saat offline
+- **Camera Integration** - Upload foto langsung dari kamera
 
-**Phase 3: Kebun Saya** ✅ COMPLETED
-- ✅ Halaman list kebun dengan grid layout
-- ✅ Search dan filter functionality (by nama, lokasi, status)
-- ✅ Add kebun dengan modal form
-- ✅ Form validation dengan React Hook Form + Zod
-- ✅ Delete kebun dengan confirmation
-- ✅ Statistics display (Total Kebun, Luas, Pohon, Status Baik)
-
-**Phase 4: Detail Kebun - Tab Informasi** ✅ COMPLETED
-- ✅ Garden header dengan breadcrumb navigation
-- ✅ Quick stats bar (4 cards)
-- ✅ Production line chart (6 months history)
-- ✅ Activity timeline
-- ✅ Two-column layout dengan info cards
-- ✅ Productivity metrics calculation
-
-**Phase 5: Detail Kebun - Tab Task** ✅ COMPLETED
-- ✅ Kanban-style task board (To Do, In Progress, Done)
-- ✅ Filter by status dan kategori
-- ✅ Quick complete checkbox
-- ✅ Task stats display
-- ✅ Priority and category badges
-- ✅ Status toggle functionality
-
-**Phase 6: Detail Kebun - Tab Panen** ✅ COMPLETED
-- ✅ Summary cards (total panen, nilai, rata-rata, kualitas)
-- ✅ Harvest table dengan all data
-- ✅ Production bar chart (Recharts)
-- ✅ Kualitas badge color coding
-- ✅ Currency formatting (Rupiah)
-
-**Phase 7: Detail Kebun - Tab Masalah** ✅ COMPLETED
-- ✅ Issue cards dengan filter by status
-- ✅ Photo display dengan Next.js Image
-- ✅ Severity badges (Parah, Sedang, Ringan)
-- ✅ Status toggle (Open/Resolved)
-- ✅ Solution notes display
-- ✅ Stats cards (Open vs Resolved)
-
-**Phase 8: Detail Kebun - Tab Perawatan** ✅ COMPLETED
-- ✅ Timeline view untuk maintenance
-- ✅ Visual timeline dengan status-colored dots
-- ✅ Schedule maintenance dengan recurring options
-- ✅ Mark as done functionality
-- ✅ Stats display (Dijadwalkan, Selesai, Terlambat)
-- ✅ Penanggung jawab tracking
-
-**Phase 9: Detail Kebun - Tab Dokumentasi** ✅ COMPLETED
-- ✅ Three-tab system (Foto, Dokumen, Catatan)
-- ✅ Photo gallery grid dengan hover effects
-- ✅ Document list dengan metadata
-- ✅ Note cards dengan sticky note style
-- ✅ Stats overview untuk each type
-- ✅ Category and date labels
-
-### 🎯 Optional Enhancements (Recommended for Production):
-
-**Phase 10: Polish & Optimization**
-- ⚪ Add loading states & skeleton loaders
-- ⚪ Implement error boundaries
-- ⚪ Add all CRUD modal forms (currently only Add Garden modal is fully functional)
-- ⚪ Implement global state management (Context API or Zustand)
-- ⚪ Add more comprehensive form validations
-- ⚪ Implement real file upload functionality
-- ⚪ Add export to PDF/Excel features
-- ⚪ Improve mobile responsiveness
-- ⚪ Add authentication & user management
-- ⚪ Integrate with real Supabase backend
-
-## 📊 What's Working RIGHT NOW
-
-✅ **Fully Functional Features:**
-1. **Dashboard** - Complete dengan charts, stats, dan quick access
-2. **Kebun Management** - Add, view, delete gardens dengan validation
-3. **Detail Kebun** - 6 fully functional tabs dengan semua fitur
-4. **Task Management** - Kanban board dengan status toggling
-5. **Harvest Tracking** - Complete dengan charts dan table
-6. **Issue Tracking** - Card view dengan status management
-7. **Maintenance Scheduling** - Timeline view dengan mark done
-8. **Documentation** - Three-type management (foto, dokumen, catatan)
-9. **Search & Filtering** - Working di semua pages
-10. **Responsive Design** - Desktop & mobile friendly
-11. **Toast Notifications** - All actions provide feedback
-12. **Mock Data** - Realistic data untuk testing
+---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
-- **State Management**: React Query + Context API
-- **Data Fetching**: React Query (TanStack Query)
-- **Database**: Supabase (PostgreSQL)
-- **Form Handling**: React Hook Form + Zod
-- **Charts**: Recharts
-- **Icons**: Lucide React
-- **Date Handling**: date-fns
-- **Notifications**: Sonner
+| Kategori | Teknologi |
+|----------|-----------|
+| **Framework** | Next.js 15 (App Router) |
+| **UI Library** | React 19 |
+| **Language** | TypeScript 5.6 |
+| **Styling** | Tailwind CSS 3.4 |
+| **Database** | Supabase (PostgreSQL) |
+| **Storage** | Supabase Storage |
+| **State Management** | React Query (TanStack) |
+| **Forms** | React Hook Form + Zod |
+| **UI Components** | Radix UI + shadcn/ui |
+| **Charts** | Recharts |
+| **Animations** | Framer Motion |
+| **Icons** | Lucide React |
+| **Date Handling** | date-fns |
+| **Notifications** | Sonner |
 
-## ⚡ Performance Features
-
-- **React Query Caching** - Automatic data caching & background refetching
-- **Single Query Optimization** - 1 API call instead of 5 (80% reduction)
-- **30+ Database Indexes** - Optimized for fast queries
-- **Loading Skeletons** - Professional loading states
-- **Composite Indexes** - Optimized for common query patterns
-- **Partial Indexes** - Faster filtered queries
+---
 
 ## 📁 Struktur Project
 
 ```
-sawitpro/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout dengan Navbar
-│   ├── page.tsx            # Dashboard (✅ Completed)
-│   ├── globals.css         # Global styles dengan Tailwind
-│   └── kebun/              # Kebun routes (✅ Completed)
-│       ├── page.tsx        # List kebun
-│       └── [id]/           # Detail kebun
-│           └── page.tsx    # Detail dengan tabs
+palmtrack/
+├── app/                          # Next.js App Router
+│   ├── kebun/                    # Halaman kebun
+│   │   ├── [id]/                 # Detail kebun (dynamic route)
+│   │   └── page.tsx              # Daftar kebun
+│   ├── globals.css               # Global styles
+│   ├── layout.tsx                # Root layout
+│   └── page.tsx                  # Dashboard
+│
 ├── components/
-│   ├── ui/                 # shadcn/ui components (✅ Completed)
-│   ├── layout/
-│   │   └── Navbar.tsx      # Main navigation (✅ Completed)
-│   ├── dashboard/          # Dashboard components (✅ Completed)
-│   ├── kebun/              # Kebun components (✅ Completed)
-│   └── kebun-detail/       # Detail kebun components (✅ Completed)
-│       └── tabs/           # Tab components (✅ Completed)
+│   ├── dashboard/                # Komponen dashboard
+│   │   ├── GardenQuickAccess.tsx # Quick access cards
+│   │   ├── ProductionChart.tsx   # Grafik produksi
+│   │   ├── SummaryCards.tsx      # Kartu statistik
+│   │   ├── SwipeableTodoItem.tsx # Todo dengan swipe
+│   │   └── TodoListNew.tsx       # Todo list
+│   │
+│   ├── kebun/                    # Komponen kebun
+│   │   ├── AddGardenModal.tsx    # Modal tambah kebun
+│   │   ├── EditGardenModal.tsx   # Modal edit kebun
+│   │   └── GardenCard.tsx        # Kartu kebun
+│   │
+│   ├── kebun-detail/             # Komponen detail kebun
+│   │   ├── modals/               # Modal forms
+│   │   │   ├── AddHarvestModal.tsx
+│   │   │   ├── AddIssueModal.tsx
+│   │   │   ├── AddMaintenanceModal.tsx
+│   │   │   └── ...
+│   │   ├── tabs/                 # Tab content
+│   │   │   ├── TabPanen.tsx
+│   │   │   ├── TabMasalah.tsx
+│   │   │   ├── TabPerawatan.tsx
+│   │   │   └── ...
+│   │   ├── GardenHeader.tsx
+│   │   └── QuickStats.tsx
+│   │
+│   ├── layout/                   # Layout components
+│   │   ├── MobileNav.tsx         # Bottom navigation
+│   │   └── Navbar.tsx            # Top navbar
+│   │
+│   └── ui/                       # UI primitives
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── dialog.tsx
+│       ├── garden-image.tsx      # Garden image display
+│       ├── image-upload.tsx      # Single image upload
+│       ├── multi-image-upload.tsx # Multiple images
+│       ├── photo-gallery.tsx     # Photo gallery + lightbox
+│       └── ...
+│
 ├── lib/
-│   ├── data/
-│   │   └── mock-data.ts    # Mock data lengkap (✅ Completed)
-│   ├── supabase/           # Supabase integration
-│   │   ├── client.ts       # Supabase client
-│   │   ├── types.ts        # Database types
-│   │   └── api/            # API functions untuk CRUD
-│   └── utils.ts            # Utility functions (✅ Completed)
-├── supabase/               # Database schema & migrations
-│   ├── schema.sql          # Complete database schema
-│   └── migrations/         # Migration files
-├── scripts/
-│   └── seed-supabase.ts    # Database seeding script
+│   ├── supabase/
+│   │   ├── api/                  # API functions
+│   │   │   ├── gardens.ts
+│   │   │   ├── harvests.ts
+│   │   │   ├── issues.ts
+│   │   │   ├── maintenances.ts
+│   │   │   └── ...
+│   │   ├── client.ts             # Supabase client
+│   │   ├── storage.ts            # Storage utilities
+│   │   └── types.ts              # Database types
+│   ├── context/                  # React contexts
+│   ├── hooks/                    # Custom hooks
+│   └── utils.ts                  # Utility functions
+│
+├── public/                       # Static assets
+│   ├── manifest.json             # PWA manifest
+│   └── icons/                    # App icons
+│
+├── supabase/
+│   ├── COMPLETE_SETUP.sql        # Database schema
+│   └── STORAGE_SETUP.sql         # Storage setup
+│
 ├── types/
-│   └── index.ts            # TypeScript interfaces (✅ Completed)
-├── .env.local.example      # Environment variables template
-├── SETUP_SUPABASE.md       # 📖 Tutorial setup Supabase
-├── package.json
-├── tsconfig.json
-├── tailwind.config.ts
-└── next.config.mjs
+│   └── index.ts                  # TypeScript interfaces
+│
+└── package.json
 ```
 
-## 🎨 Design System
+---
 
-### Colors
-- **Primary**: Green (#10b981 / green-500)
-- **Success**: green-500
-- **Warning**: orange-500
-- **Danger**: red-500
-- **Background**: gray-50
-- **Card**: white dengan shadow-sm
-
-### Typography
-- **Font**: System fonts (sans-serif)
-- **Headings**: font-bold
-- **Body**: font-normal, text-sm sampai text-base
-
-### Layout
-- **Max width**: max-w-7xl
-- **Spacing**: consistent padding (p-4, p-6) dan gap (gap-4, gap-6)
-- **Rounded**: rounded-lg (8px)
-
-## 📊 Data Models
-
-### Garden
-```typescript
-interface Garden {
-  id: string;
-  nama: string;
-  lokasi: string;
-  lokasiLengkap: string;
-  luas: number; // hectares
-  jumlahPohon: number;
-  tahunTanam: number;
-  varietas: string;
-  status: 'Baik' | 'Perlu Perhatian' | 'Bermasalah';
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### Task, Harvest, Issue, Maintenance, Documentation
-Lihat `types/index.ts` untuk semua interface lengkap.
-
-## 🗄️ Mock Data
-
-File `lib/data/mock-data.ts` berisi:
-- **8 gardens** dengan variasi status
-- **20 tasks** dengan berbagai prioritas dan status
-- **41 harvest records** covering 6-12 bulan
-- **10 issues** (mix Open dan Resolved)
-- **15 maintenance records** (past dan upcoming)
-- **15 documentation items** (foto, dokumen, catatan)
-
-Semua data menggunakan date-fns untuk date handling yang relatif terhadap tanggal sekarang.
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+
-- npm atau yarn
 
-### Installation
+- Node.js 18+ 
+- npm atau yarn
+- Akun Supabase (gratis)
+
+### 1. Clone Repository
 
 ```bash
-# Install dependencies
+git clone https://github.com/yourusername/palmtrack.git
+cd palmtrack
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
+```
 
-# Run development server
+### 3. Setup Supabase
+
+#### a. Buat Project Supabase
+1. Buka [supabase.com](https://supabase.com) dan login
+2. Klik "New Project"
+3. Isi nama project dan password database
+4. Pilih region terdekat (Singapore recommended)
+5. Tunggu project selesai dibuat
+
+#### b. Setup Database
+1. Buka SQL Editor di Supabase Dashboard
+2. Copy isi file `supabase/COMPLETE_SETUP.sql`
+3. Paste dan jalankan di SQL Editor
+4. Tunggu hingga selesai (5-10 detik)
+
+#### c. Setup Storage (untuk upload gambar)
+1. Buka SQL Editor
+2. Copy isi file `supabase/STORAGE_SETUP.sql`
+3. Paste dan jalankan
+4. Buka Storage di sidebar
+5. Pastikan bucket `palmtrack-images` sudah ada
+
+#### d. Dapatkan API Keys
+1. Buka Settings → API
+2. Copy `Project URL` dan `anon public` key
+
+### 4. Environment Variables
+
+```bash
+# Copy example file
+cp .env.local.example .env.local
+
+# Edit .env.local
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### 5. Run Development Server
+
+```bash
 npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
 ```
 
-Aplikasi akan berjalan di `http://localhost:3000`
+Buka [http://localhost:3000](http://localhost:3000)
 
-## 📝 Development Guide
+---
 
-### Menambah Halaman Baru
+## 📱 PWA Installation
 
-1. Buat file di `app/` dengan struktur App Router Next.js
-2. Import mock data dari `lib/data/mock-data.ts`
-3. Gunakan komponen UI dari `components/ui/`
-4. Follow design system yang sudah ditetapkan
+PalmTrack dapat diinstall sebagai aplikasi native di device kamu:
 
-### Menambah Komponen
+### Android (Chrome)
+1. Buka PalmTrack di Chrome
+2. Tap menu (⋮) → "Add to Home screen"
+3. Tap "Install"
 
-1. Letakkan di folder yang sesuai (`components/dashboard/`, `components/kebun/`, dll)
-2. Gunakan TypeScript dengan proper typing
-3. Gunakan Tailwind CSS untuk styling
-4. Import utilities dari `lib/utils.ts` (cn function untuk className merging)
+### iOS (Safari)
+1. Buka PalmTrack di Safari
+2. Tap Share button (□↑)
+3. Scroll dan tap "Add to Home Screen"
+4. Tap "Add"
 
-### State Management
+### Desktop (Chrome/Edge)
+1. Buka PalmTrack
+2. Klik icon install di address bar
+3. Klik "Install"
 
-Untuk MVP ini menggunakan:
-- `useState` untuk local component state
-- Props drilling untuk passing data
-- Untuk production nanti bisa migrate ke Context API atau Zustand
+---
 
-### Form Handling
+## 🗄️ Database Schema
 
-Gunakan React Hook Form + Zod:
+### Tables
+
+| Table | Deskripsi |
+|-------|-----------|
+| `gardens` | Data kebun (nama, lokasi, luas, dll) |
+| `harvests` | Catatan panen |
+| `issues` | Laporan masalah |
+| `maintenances` | Jadwal perawatan |
+| `tasks` | Tugas/todo |
+| `expenses` | Pengeluaran |
+| `documentation` | Dokumentasi |
+
+### Entity Relationship
+
+```
+gardens (1) ─────┬───── (*) harvests
+                 ├───── (*) issues
+                 ├───── (*) maintenances
+                 ├───── (*) tasks
+                 ├───── (*) expenses
+                 └───── (*) documentation
+```
+
+---
+
+## 📸 Image System
+
+### Storage Structure
+
+```
+palmtrack-images/
+├── gardens/{garden_id}/{timestamp}.jpg
+├── issues/{garden_id}/{timestamp}/{photo}.jpg
+└── maintenances/{garden_id}/{timestamp}/{photo}.jpg
+```
+
+### Features
+- **Auto Compression** - Gambar dikompresi otomatis (max 1920px, 80% quality)
+- **Drag & Drop** - Upload dengan drag and drop
+- **Camera Capture** - Ambil foto langsung dari kamera
+- **Multiple Upload** - Upload beberapa foto sekaligus
+- **Photo Gallery** - Lightbox untuk view foto
+- **Lazy Loading** - Optimasi performa loading
+
+---
+
+## 🔧 Available Scripts
+
+```bash
+# Development
+npm run dev          # Start development server
+
+# Production
+npm run build        # Build for production
+npm run start        # Start production server
+
+# Utilities
+npm run lint         # Run ESLint
+npm run seed         # Seed database with sample data
+```
+
+---
+
+## 📖 API Reference
+
+### Gardens API
+
 ```typescript
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { 
+  getGardens, 
+  getGardenBySlug, 
+  createGarden, 
+  updateGarden, 
+  deleteGarden 
+} from '@/lib/supabase/api/gardens';
 
-const formSchema = z.object({
-  nama: z.string().min(1, "Nama wajib diisi"),
-  luas: z.number().positive("Luas harus positif"),
+// Get all gardens
+const gardens = await getGardens();
+
+// Get garden by slug
+const garden = await getGardenBySlug('kebun-sawit-a');
+
+// Create garden
+const newGarden = await createGarden({
+  nama: 'Kebun Baru',
+  lokasi: 'Riau',
+  luas: 10,
+  jumlahPohon: 1500,
+  tahunTanam: 2020,
+  varietas: 'Tenera',
+  status: 'Baik'
 });
 
-const form = useForm({
-  resolver: zodResolver(formSchema),
+// Update garden
+await updateGarden(gardenId, { nama: 'Nama Baru' });
+
+// Delete garden
+await deleteGarden(gardenId);
+```
+
+### Harvests API
+
+```typescript
+import { 
+  getHarvestsByGarden, 
+  createHarvest, 
+  deleteHarvest 
+} from '@/lib/supabase/api/harvests';
+
+// Get harvests
+const harvests = await getHarvestsByGarden(gardenId);
+
+// Create harvest
+await createHarvest({
+  gardenId,
+  tanggal: new Date(),
+  jumlahKg: 500,
+  hargaPerKg: 2500,
+  kualitas: 'Baik'
 });
 ```
 
-### Toast Notifications
+### Storage API
 
-Gunakan Sonner untuk notifications:
 ```typescript
-import { toast } from "sonner";
+import { 
+  uploadImage, 
+  uploadMultipleImages, 
+  deleteImage,
+  compressImage 
+} from '@/lib/supabase/storage';
 
-toast.success("Data berhasil disimpan!");
-toast.error("Terjadi kesalahan!");
+// Upload single image
+const { url, error } = await uploadImage(file, 'gardens/123');
+
+// Upload multiple images
+const { urls, errors } = await uploadMultipleImages(files, 'issues/456');
+
+// Delete image
+await deleteImage('path/to/image.jpg');
 ```
 
-## 🎯 Next Steps
+---
 
-### Immediate (Priority: HIGH)
+## 🎨 UI Components
 
-1. **Buat halaman Kebun Saya** (`app/kebun/page.tsx`)
-   - Grid layout untuk garden cards
-   - Search dan filter
-   - Add garden modal dengan form
+### Image Upload
 
-2. **Buat Detail Kebun** (`app/kebun/[id]/page.tsx`)
-   - Garden header dengan stats
-   - Tab navigation (6 tabs)
-   - Implement Tab Informasi dulu
+```tsx
+import { ImageUpload } from '@/components/ui/image-upload';
 
-3. **Context atau State Management**
-   - Buat context untuk gardens, tasks, etc.
-   - CRUD operations (in-memory untuk MVP)
-   - State updates untuk UI reactivity
+<ImageUpload
+  value={imageUrl}
+  onChange={setImageUrl}
+  folder="gardens/123"
+  aspectRatio="video"
+/>
+```
 
-### Medium Priority
+### Multi Image Upload
 
-4. **Implement remaining tabs** (Task, Panen, Masalah, Perawatan, Dokumentasi)
-5. **Add form validations** untuk semua forms
-6. **Implement filtering dan sorting** untuk semua lists
+```tsx
+import { MultiImageUpload } from '@/components/ui/multi-image-upload';
 
-### Polish
+<MultiImageUpload
+  value={photos}
+  onChange={setPhotos}
+  folder="issues/456"
+  maxImages={5}
+/>
+```
 
-7. **Add loading states** dengan skeletons
-8. **Add empty states** untuk data kosong
-9. **Toast notifications** untuk semua user actions
-10. **Responsive testing** dan optimization
+### Photo Gallery
 
-## 🗄️ Database Setup
+```tsx
+import { PhotoGallery } from '@/components/ui/photo-gallery';
 
-### Supabase Integration
+<PhotoGallery
+  photos={issue.fotoUrls}
+  maxVisible={3}
+/>
+```
 
-Aplikasi ini sudah terintegrasi penuh dengan Supabase sebagai backend database.
+### Garden Image
 
-**Setup Database:**
-1. Baca tutorial lengkap di [SETUP_SUPABASE.md](./SETUP_SUPABASE.md)
-2. Buat project Supabase gratis
-3. Jalankan schema SQL (`supabase/schema.sql`)
-4. Konfigurasi environment variables
-5. Seed database dengan mock data
+```tsx
+import { GardenImage, GardenThumbnail } from '@/components/ui/garden-image';
 
-**Database Schema:**
-- ✅ 7 tabel utama (gardens, tasks, harvests, issues, maintenances, documentation, expenses)
-- ✅ Foreign key relationships dengan CASCADE delete
-- ✅ Indexes untuk performa query optimal
-- ✅ Triggers untuk auto-update timestamps
-- ✅ Validation dengan CHECK constraints
+<GardenImage
+  src={garden.imageUrl}
+  alt={garden.nama}
+  aspectRatio="video"
+/>
 
-## 🐛 Known Issues / Limitations
+<GardenThumbnail
+  src={garden.imageUrl}
+  alt={garden.nama}
+  size="md"
+/>
+```
 
-- **No authentication**: Belum ada login/auth (bisa ditambahkan dengan Supabase Auth)
-- **No real file upload**: Photo upload menggunakan placeholder URLs (bisa ditambahkan dengan Supabase Storage)
-- **RLS disabled**: Row Level Security dinonaktifkan untuk development
+---
 
-## 📚 Resources
+## 🔒 Security
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [shadcn/ui Documentation](https://ui.shadcn.com)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [React Hook Form](https://react-hook-form.com)
-- [Recharts Documentation](https://recharts.org)
+- **Row Level Security (RLS)** - Dapat diaktifkan di Supabase
+- **Public Storage** - Gambar dapat diakses publik
+- **File Validation** - Validasi tipe dan ukuran file
+- **Input Sanitization** - Validasi input dengan Zod
+
+---
+
+## 📊 Performance
+
+- **Image Compression** - Otomatis compress gambar sebelum upload
+- **Lazy Loading** - Gambar dimuat saat diperlukan
+- **React Query** - Caching dan background refetching
+- **Optimized Indexes** - Database indexes untuk query cepat
+- **Code Splitting** - Next.js automatic code splitting
+
+---
+
+## 🐛 Troubleshooting
+
+### Supabase Connection Error
+```
+Error: Supabase is not configured
+```
+**Solusi:** Pastikan `.env.local` sudah diisi dengan benar
+
+### Image Upload Failed
+```
+Error: Failed to upload image
+```
+**Solusi:** 
+1. Pastikan bucket `palmtrack-images` sudah dibuat
+2. Jalankan `STORAGE_SETUP.sql`
+3. Check file size (max 5MB)
+
+### Database Error
+```
+Error: relation "gardens" does not exist
+```
+**Solusi:** Jalankan `COMPLETE_SETUP.sql` di SQL Editor
+
+---
+
+## 🤝 Contributing
+
+1. Fork repository
+2. Buat branch baru (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push ke branch (`git push origin feature/amazing-feature`)
+5. Buat Pull Request
+
+---
 
 ## 📄 License
 
-MIT
+MIT License - lihat [LICENSE](LICENSE) untuk detail.
+
+---
 
 ## 👨‍💻 Author
 
-Built with ❤️ for Indonesian palm oil garden management
+Dibuat dengan ❤️ untuk petani kelapa sawit Indonesia.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/)
+- [Supabase](https://supabase.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Radix UI](https://www.radix-ui.com/)

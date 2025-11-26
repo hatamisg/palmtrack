@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MultiImageUpload } from "@/components/ui/multi-image-upload";
 import { Issue } from "@/types";
 
 const issueSchema = z.object({
@@ -26,7 +28,6 @@ const issueSchema = z.object({
   status: z.enum(["Open", "Resolved"]),
   tanggalLapor: z.string().min(1, "Tanggal lapor wajib diisi"),
   solusi: z.string().optional(),
-  fotoUrls: z.string().optional(), // Placeholder for future file upload
 });
 
 type IssueFormData = z.infer<typeof issueSchema>;
@@ -35,9 +36,12 @@ interface AddIssueModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: Omit<Issue, "id" | "gardenId" | "createdAt" | "updatedAt">) => void;
+  gardenId: string;
 }
 
-export default function AddIssueModal({ open, onClose, onSubmit }: AddIssueModalProps) {
+export default function AddIssueModal({ open, onClose, onSubmit, gardenId }: AddIssueModalProps) {
+  const [photos, setPhotos] = useState<string[]>([]);
+  
   const {
     register,
     handleSubmit,
@@ -55,7 +59,6 @@ export default function AddIssueModal({ open, onClose, onSubmit }: AddIssueModal
       status: "Open",
       tanggalLapor: "",
       solusi: "",
-      fotoUrls: "",
     },
   });
 
@@ -66,13 +69,15 @@ export default function AddIssueModal({ open, onClose, onSubmit }: AddIssueModal
     onSubmit({
       ...data,
       tanggalLapor: new Date(data.tanggalLapor),
-      fotoUrls: data.fotoUrls ? [data.fotoUrls] : undefined,
+      fotoUrls: photos.length > 0 ? photos : undefined,
     } as any);
     reset();
+    setPhotos([]);
   };
 
   const handleClose = () => {
     reset();
+    setPhotos([]);
     onClose();
   };
 
@@ -208,20 +213,18 @@ export default function AddIssueModal({ open, onClose, onSubmit }: AddIssueModal
             )}
           </div>
 
-          {/* Foto URLs - Placeholder */}
+          {/* Foto Masalah */}
           <div>
-            <Label htmlFor="fotoUrls">Foto URL (Opsional - Placeholder)</Label>
-            <Input
-              id="fotoUrls"
-              placeholder="https://example.com/image.jpg"
-              {...register("fotoUrls")}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Fitur upload foto akan ditambahkan di masa mendatang
+            <Label>Foto Masalah (Opsional)</Label>
+            <p className="text-xs text-gray-500 mb-2">
+              Upload foto untuk dokumentasi masalah
             </p>
-            {errors.fotoUrls && (
-              <p className="text-sm text-red-500 mt-1">{errors.fotoUrls.message}</p>
-            )}
+            <MultiImageUpload
+              value={photos}
+              onChange={setPhotos}
+              folder={`issues/${gardenId}/${Date.now()}`}
+              maxImages={5}
+            />
           </div>
 
           <DialogFooter>

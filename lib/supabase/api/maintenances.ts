@@ -21,6 +21,7 @@ function convertFromDb(maintenance: Maintenance) {
     isRecurring: maintenance.is_recurring,
     recurringInterval: maintenance.recurring_interval || undefined,
     tanggalSelesai: maintenance.tanggal_selesai ? new Date(maintenance.tanggal_selesai) : undefined,
+    images: (maintenance as any).images || undefined,
     createdAt: new Date(maintenance.created_at),
     updatedAt: new Date(maintenance.updated_at),
   };
@@ -45,6 +46,7 @@ function convertToDb(maintenance: any): MaintenanceInsert | MaintenanceUpdate {
           ? maintenance.tanggalSelesai.toISOString().split('T')[0]
           : maintenance.tanggalSelesai)
       : null,
+    images: maintenance.images || null,
   };
 }
 

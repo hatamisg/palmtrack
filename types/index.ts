@@ -11,6 +11,7 @@ export interface Garden {
   tahunTanam: number;
   varietas: string;
   status: 'Baik' | 'Perlu Perhatian' | 'Bermasalah';
+  imageUrl?: string; // Garden main image URL
   createdAt: Date;
   updatedAt: Date;
 }
@@ -69,6 +70,7 @@ export interface Maintenance {
   isRecurring: boolean;
   recurringInterval?: number; // in days
   tanggalSelesai?: Date;
+  images?: string[]; // Before/after photos
   createdAt: Date;
   updatedAt: Date;
 }

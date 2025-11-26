@@ -53,28 +53,35 @@ export default function KebunPage() {
   const openEditModal = (garden: Garden) => {
     setSelectedGarden(garden);
     setIsEditModalOpen(true);
+    
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Kebun Saya</h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Kelola semua kebun kelapa sawit Anda
-            </p>
+        <div className="flex flex-col gap-3 mb-4 md:mb-8">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Kebun Saya</h1>
+              <p className="mt-1 md:mt-2 text-xs md:text-sm text-gray-600">
+                Kelola semua kebun kelapa sawit Anda
+              </p>
+            </div>
+            <Button 
+              onClick={() => setIsAddModalOpen(true)}
+              size="sm"
+              className="flex-shrink-0"
+            >
+              <Plus className="h-4 w-4 md:mr-2" />
+              <span className="hidden md:inline">Tambah Kebun</span>
+            </Button>
           </div>
-          <Button onClick={() => setIsAddModalOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Tambah Kebun
-          </Button>
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm mb-4 md:mb-6">
+          <div className="flex flex-col md:grid md:grid-cols-3 gap-3 md:gap-4">
             <div className="md:col-span-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -83,13 +90,13 @@ export default function KebunPage() {
                   placeholder="Cari nama kebun atau lokasi..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-11"
                 />
               </div>
             </div>
             <div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="h-11">
                   <SelectValue placeholder="Filter Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -104,26 +111,26 @@ export default function KebunPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600">Total Kebun</p>
-            <p className="text-2xl font-bold text-gray-900">{filteredGardens.length}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm">
+            <p className="text-xs md:text-sm text-gray-600">Total Kebun</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">{filteredGardens.length}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600">Total Luas</p>
-            <p className="text-2xl font-bold text-gray-900">
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm">
+            <p className="text-xs md:text-sm text-gray-600">Total Luas</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
               {filteredGardens.reduce((sum, g) => sum + g.luas, 0).toFixed(1)} Ha
             </p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600">Total Pohon</p>
-            <p className="text-2xl font-bold text-gray-900">
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm">
+            <p className="text-xs md:text-sm text-gray-600">Total Pohon</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
               {filteredGardens.reduce((sum, g) => sum + g.jumlahPohon, 0).toLocaleString("id-ID")}
             </p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600">Status Baik</p>
-            <p className="text-2xl font-bold text-green-600">
+          <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm">
+            <p className="text-xs md:text-sm text-gray-600">Status Baik</p>
+            <p className="text-xl md:text-2xl font-bold text-green-600 mt-1">
               {filteredGardens.filter((g) => g.status === "Baik").length}
             </p>
           </div>
@@ -140,7 +147,7 @@ export default function KebunPage() {
             <p className="text-gray-500">Tidak ada kebun yang sesuai dengan filter</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredGardens.map((garden) => (
               <GardenCard
                 key={garden.id}

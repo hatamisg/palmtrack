@@ -62,7 +62,7 @@ export default function DetailKebunPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Garden Header */}
         <GardenHeader garden={garden} onEdit={() => setIsEditModalOpen(true)} />
 
@@ -75,18 +75,20 @@ export default function DetailKebunPage() {
         />
 
         {/* Tabs */}
-        <div className="mt-6">
+        <div className="mt-4 md:mt-6">
           <Tabs defaultValue={defaultTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-6 lg:w-auto">
-              <TabsTrigger value="informasi">Informasi</TabsTrigger>
-              <TabsTrigger value="panen">Panen</TabsTrigger>
-              <TabsTrigger value="masalah">Masalah</TabsTrigger>
-              <TabsTrigger value="perawatan">Perawatan</TabsTrigger>
-              <TabsTrigger value="dokumentasi">Dokumentasi</TabsTrigger>
-              <TabsTrigger value="pengeluaran">Pengeluaran</TabsTrigger>
-            </TabsList>
+            <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+              <TabsList className="inline-flex w-auto min-w-full md:grid md:w-full md:grid-cols-6 lg:w-auto">
+                <TabsTrigger value="informasi" className="text-xs md:text-sm whitespace-nowrap">Informasi</TabsTrigger>
+                <TabsTrigger value="panen" className="text-xs md:text-sm whitespace-nowrap">Panen</TabsTrigger>
+                <TabsTrigger value="masalah" className="text-xs md:text-sm whitespace-nowrap">Masalah</TabsTrigger>
+                <TabsTrigger value="perawatan" className="text-xs md:text-sm whitespace-nowrap">Perawatan</TabsTrigger>
+                <TabsTrigger value="dokumentasi" className="text-xs md:text-sm whitespace-nowrap">Dokumentasi</TabsTrigger>
+                <TabsTrigger value="pengeluaran" className="text-xs md:text-sm whitespace-nowrap">Pengeluaran</TabsTrigger>
+              </TabsList>
+            </div>
 
-            <TabsContent value="informasi" className="mt-6">
+            <TabsContent value="informasi" className="mt-4 md:mt-6">
               <TabInformasi
                 garden={garden}
                 harvests={harvests}
@@ -94,23 +96,23 @@ export default function DetailKebunPage() {
               />
             </TabsContent>
 
-            <TabsContent value="panen" className="mt-6">
+            <TabsContent value="panen" className="mt-4 md:mt-6">
               <TabPanen gardenId={garden.id} harvests={harvests} />
             </TabsContent>
 
-            <TabsContent value="masalah" className="mt-6">
+            <TabsContent value="masalah" className="mt-4 md:mt-6">
               <TabMasalah gardenId={garden.id} issues={issues} />
             </TabsContent>
 
-            <TabsContent value="perawatan" className="mt-6">
+            <TabsContent value="perawatan" className="mt-4 md:mt-6">
               <TabPerawatan gardenId={garden.id} maintenances={maintenances} />
             </TabsContent>
 
-            <TabsContent value="dokumentasi" className="mt-6">
+            <TabsContent value="dokumentasi" className="mt-4 md:mt-6">
               <TabDokumentasi gardenId={garden.id} documentation={documentation} />
             </TabsContent>
 
-            <TabsContent value="pengeluaran" className="mt-6">
+            <TabsContent value="pengeluaran" className="mt-4 md:mt-6">
               <TabPengeluaran gardenId={garden.id} expenses={expenses} />
             </TabsContent>
           </Tabs>

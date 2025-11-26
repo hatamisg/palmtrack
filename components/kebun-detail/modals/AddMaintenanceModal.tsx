@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { MultiImageUpload } from "@/components/ui/multi-image-upload";
 import { Maintenance } from "@/types";
 
 const maintenanceSchema = z.object({
@@ -36,9 +38,12 @@ interface AddMaintenanceModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: Omit<Maintenance, "id" | "gardenId" | "createdAt" | "updatedAt" | "tanggalSelesai">) => void;
+  gardenId: string;
 }
 
-export default function AddMaintenanceModal({ open, onClose, onSubmit }: AddMaintenanceModalProps) {
+export default function AddMaintenanceModal({ open, onClose, onSubmit, gardenId }: AddMaintenanceModalProps) {
+  const [photos, setPhotos] = useState<string[]>([]);
+  
   const {
     register,
     handleSubmit,
@@ -68,6 +73,7 @@ export default function AddMaintenanceModal({ open, onClose, onSubmit }: AddMain
     const submitData: any = {
       ...data,
       tanggalDijadwalkan: new Date(data.tanggalDijadwalkan),
+      images: photos.length > 0 ? photos : undefined,
     };
 
     // Only include recurringInterval if isRecurring is true
@@ -77,10 +83,12 @@ export default function AddMaintenanceModal({ open, onClose, onSubmit }: AddMain
 
     onSubmit(submitData);
     reset();
+    setPhotos([]);
   };
 
   const handleClose = () => {
     reset();
+    setPhotos([]);
     onClose();
   };
 
@@ -234,6 +242,20 @@ export default function AddMaintenanceModal({ open, onClose, onSubmit }: AddMain
               )}
             </div>
           )}
+
+          {/* Foto Perawatan */}
+          <div>
+            <Label>Foto Dokumentasi (Opsional)</Label>
+            <p className="text-xs text-gray-500 mb-2">
+              Upload foto sebelum/sesudah perawatan
+            </p>
+            <MultiImageUpload
+              value={photos}
+              onChange={setPhotos}
+              folder={`maintenances/${gardenId}/${Date.now()}`}
+              maxImages={4}
+            />
+          </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>

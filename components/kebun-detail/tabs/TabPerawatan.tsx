@@ -5,6 +5,7 @@ import { Maintenance } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PhotoGallery } from "@/components/ui/photo-gallery";
 import { Plus, Calendar, CheckCircle2, Edit, Trash2 } from "lucide-react";
 import { format, isPast, isFuture } from "date-fns";
 import { id } from "date-fns/locale";
@@ -142,31 +143,31 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
     <div className="space-y-6">
       {/* Header & Stats */}
       <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-primary" />
+        <CardHeader className="pb-3 md:pb-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
+            <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+              <Calendar className="h-4 w-4 md:h-5 md:w-5 text-primary" />
               Jadwal Perawatan
             </CardTitle>
-            <Button onClick={() => setIsAddModalOpen(true)}>
+            <Button onClick={() => setIsAddModalOpen(true)} size="sm" className="w-full md:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Jadwalkan Perawatan
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-gray-600">Dijadwalkan</p>
-              <p className="text-3xl font-bold text-blue-600">{dijadwalkan}</p>
+        <CardContent className="px-3 md:px-6">
+          <div className="grid grid-cols-3 gap-2 md:gap-4">
+            <div className="text-center p-2 md:p-4 bg-blue-50 rounded-lg">
+              <p className="text-xs md:text-sm text-gray-600">Dijadwalkan</p>
+              <p className="text-xl md:text-3xl font-bold text-blue-600 mt-1">{dijadwalkan}</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <p className="text-sm text-gray-600">Selesai</p>
-              <p className="text-3xl font-bold text-green-600">{selesai}</p>
+            <div className="text-center p-2 md:p-4 bg-green-50 rounded-lg">
+              <p className="text-xs md:text-sm text-gray-600">Selesai</p>
+              <p className="text-xl md:text-3xl font-bold text-green-600 mt-1">{selesai}</p>
             </div>
-            <div className="text-center p-4 bg-red-50 rounded-lg">
-              <p className="text-sm text-gray-600">Terlambat</p>
-              <p className="text-3xl font-bold text-red-600">{terlambat}</p>
+            <div className="text-center p-2 md:p-4 bg-red-50 rounded-lg">
+              <p className="text-xs md:text-sm text-gray-600">Terlambat</p>
+              <p className="text-xl md:text-3xl font-bold text-red-600 mt-1">{terlambat}</p>
             </div>
           </div>
         </CardContent>
@@ -175,20 +176,20 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
       {/* Timeline */}
       <Card>
         <CardHeader>
-          <CardTitle>Timeline Perawatan</CardTitle>
+          <CardTitle className="text-base md:text-lg">Timeline Perawatan</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="px-3 md:px-6">
+          <div className="space-y-3 md:space-y-4">
             {sortedMaintenances.map((maintenance, index) => (
               <div
                 key={maintenance.id}
-                className={`flex gap-4 pb-4 ${
+                className={`flex gap-2 md:gap-4 pb-3 md:pb-4 ${
                   index < sortedMaintenances.length - 1 ? "border-b" : ""
                 }`}
               >
                 {/* Date */}
-                <div className="flex-shrink-0 w-24 text-right">
-                  <div className="text-sm font-medium text-gray-900">
+                <div className="flex-shrink-0 w-16 md:w-24 text-right">
+                  <div className="text-xs md:text-sm font-medium text-gray-900">
                     {format(new Date(maintenance.tanggalDijadwalkan), "d MMM", { locale: id })}
                   </div>
                   <div className="text-xs text-gray-500">
@@ -197,9 +198,9 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
                 </div>
 
                 {/* Timeline dot */}
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center pt-1">
                   <div
-                    className={`w-3 h-3 rounded-full ${
+                    className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full flex-shrink-0 ${
                       maintenance.status === "Selesai"
                         ? "bg-green-500"
                         : maintenance.status === "Terlambat"
@@ -213,11 +214,11 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 pb-4">
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900">{maintenance.judul}</h4>
-                      <div className="flex items-center gap-2 mt-1">
+                <div className="flex-1 pb-3 md:pb-4 min-w-0">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-4 mb-2">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm md:text-base text-gray-900 truncate">{maintenance.judul}</h4>
+                      <div className="flex flex-wrap items-center gap-1 md:gap-2 mt-1">
                         <Badge variant="outline" className="text-xs">
                           {maintenance.jenisPerawatan}
                         </Badge>
@@ -231,15 +232,18 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    
+                    {/* Actions - Stack on mobile */}
+                    <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
                       {maintenance.status === "Dijadwalkan" && (
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleMarkDone(maintenance.id)}
+                          className="h-8 text-xs"
                         >
-                          <CheckCircle2 className="h-4 w-4 mr-1" />
-                          Selesai
+                          <CheckCircle2 className="h-3 w-3 md:h-4 md:w-4 md:mr-1" />
+                          <span className="hidden md:inline">Selesai</span>
                         </Button>
                       )}
                       <Button
@@ -262,12 +266,19 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
                   </div>
 
                   {maintenance.detail && (
-                    <p className="text-sm text-gray-600 mb-2">{maintenance.detail}</p>
+                    <p className="text-xs md:text-sm text-gray-600 mb-2 line-clamp-2">{maintenance.detail}</p>
+                  )}
+
+                  {/* Photo Gallery */}
+                  {maintenance.images && maintenance.images.length > 0 && (
+                    <div className="mb-2">
+                      <PhotoGallery photos={maintenance.images} maxVisible={3} />
+                    </div>
                   )}
 
                   {maintenance.penanggungJawab && (
-                    <p className="text-xs text-gray-500">
-                      Penanggung Jawab: {maintenance.penanggungJawab}
+                    <p className="text-xs text-gray-500 truncate">
+                      PJ: {maintenance.penanggungJawab}
                     </p>
                   )}
 
@@ -294,6 +305,7 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddMaintenance}
+        gardenId={gardenId}
       />
 
       <EditMaintenanceModal
@@ -304,6 +316,7 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
         }}
         onSubmit={handleEditMaintenance}
         maintenance={selectedMaintenance}
+        gardenId={gardenId}
       />
 
       {/* Delete Confirmation Dialog */}

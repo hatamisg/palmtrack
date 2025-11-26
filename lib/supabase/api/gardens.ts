@@ -19,6 +19,7 @@ function convertFromDb(garden: Garden) {
     tahunTanam: garden.tahun_tanam,
     varietas: garden.varietas,
     status: garden.status,
+    imageUrl: (garden as any).image_url || undefined,
     createdAt: new Date(garden.created_at),
     updatedAt: new Date(garden.updated_at),
   };
@@ -36,6 +37,7 @@ function convertToDb(garden: any): GardenInsert | GardenUpdate {
     tahun_tanam: garden.tahunTanam,
     varietas: garden.varietas,
     status: garden.status,
+    image_url: garden.imageUrl || null,
   };
 }
 
@@ -380,6 +382,7 @@ export async function getGardenWithRelations(idOrSlug: string) {
           isRecurring: m.is_recurring,
           recurringInterval: m.recurring_interval || undefined,
           tanggalSelesai: m.tanggal_selesai ? new Date(m.tanggal_selesai) : undefined,
+          images: m.images || undefined,
           createdAt: new Date(m.created_at),
           updatedAt: new Date(m.updated_at),
         })),

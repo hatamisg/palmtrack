@@ -5,6 +5,7 @@ import SummaryCards from "@/components/dashboard/SummaryCards";
 import TodoListNew from "@/components/dashboard/TodoListNew";
 import ProductionChart from "@/components/dashboard/ProductionChart";
 import GardenQuickAccess from "@/components/dashboard/GardenQuickAccess";
+import { SwipeHint } from "@/components/ui/swipe-hint";
 
 export default async function DashboardPage() {
   // Fetch data from database
@@ -40,11 +41,11 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-2 text-sm text-gray-600">
+        <div className="mb-4 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="mt-1 md:mt-2 text-xs md:text-sm text-gray-600">
             Overview manajemen kebun kelapa sawit Anda
           </p>
         </div>
@@ -59,24 +60,29 @@ export default async function DashboardPage() {
         </Suspense>
 
         {/* Daftar To-Do Terpusat */}
-        <div className="mt-8">
+        <div className="mt-4 md:mt-8">
           <Suspense fallback={<div>Loading...</div>}>
             <TodoListNew />
           </Suspense>
         </div>
 
         {/* Produksi Bulan Ini */}
-        <div className="mt-8">
+        <div className="mt-4 md:mt-8">
           <Suspense fallback={<div>Loading...</div>}>
             <ProductionChart data={monthlyProduction} />
           </Suspense>
         </div>
 
         {/* Kebun Saya Quick Access */}
-        <div className="mt-8">
+        <div className="mt-4 md:mt-8">
           <Suspense fallback={<div>Loading...</div>}>
             <GardenQuickAccess gardens={gardensList.slice(0, 6)} />
           </Suspense>
+        </div>
+
+        {/* Swipe Hint - Show once on mobile for todo items */}
+        <div className="md:hidden">
+          <SwipeHint storageKey="dashboard-todo-swipe-hint" />
         </div>
       </div>
     </div>

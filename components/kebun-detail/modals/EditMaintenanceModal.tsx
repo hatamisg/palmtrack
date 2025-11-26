@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,12 +16,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { MultiImageUpload } from "@/components/ui/multi-image-upload";
 import { Maintenance } from "@/types";
 
 const maintenanceSchema = z.object({
-  jenisPerawatan: z.enum(["Pemupukan", "Penyemprotan", "Pemangkasan", "Pembersihan", "Lainnya"]),
+  jenisPerawatan: z.enum([
+    "Pemupukan",
+    "Penyemprotan",
+    "Pemangkasan",
+    "Pembersihan",
+    "Lainnya",
+  ]),
   judul: z.string().min(3, "Judul minimal 3 karakter"),
   tanggalDijadwalkan: z.string().min(1, "Tanggal dijadwalkan wajib diisi"),
   status: z.enum(["Dijadwalkan", "Selesai", "Terlambat"]),
@@ -36,11 +49,25 @@ type MaintenanceFormData = z.infer<typeof maintenanceSchema>;
 interface EditMaintenanceModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Maintenance, "id" | "gardenId" | "createdAt" | "updatedAt" | "tanggalSelesai">) => void;
+  onSubmit: (
+    data: Omit<
+      Maintenance,
+      "id" | "gardenId" | "createdAt" | "updatedAt" | "tanggalSelesai"
+    >
+  ) => void;
   maintenance: Maintenance | null;
+  gardenId?: string;
 }
 
-export default function EditMaintenanceModal({ open, onClose, onSubmit, maintenance }: EditMaintenanceModalProps) {
+export default function EditMaintenanceModal({
+  open,
+  onClose,
+  onSubmit,
+  maintenance,
+  gardenId,
+}: EditMaintenanceModalProps) {
+  const [photos, setPhotos] = useState<string[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -71,15 +98,18 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
     if (maintenance) {
       setValue("jenisPerawatan", maintenance.jenisPerawatan);
       setValue("judul", maintenance.judul);
-      setValue("tanggalDijadwalkan", maintenance.tanggalDijadwalkan instanceof Date
-        ? maintenance.tanggalDijadwalkan.toISOString().split('T')[0]
-        : maintenance.tanggalDijadwalkan as string
+      setValue(
+        "tanggalDijadwalkan",
+        maintenance.tanggalDijadwalkan instanceof Date
+          ? maintenance.tanggalDijadwalkan.toISOString().split("T")[0]
+          : (maintenance.tanggalDijadwalkan as string)
       );
       setValue("status", maintenance.status);
       setValue("detail", maintenance.detail || "");
       setValue("penanggungJawab", maintenance.penanggungJawab || "");
       setValue("isRecurring", maintenance.isRecurring);
       setValue("recurringInterval", maintenance.recurringInterval || undefined);
+      setPhotos(maintenance.images || []);
     }
   }, [maintenance, setValue]);
 
@@ -87,6 +117,7 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
     const submitData: any = {
       ...data,
       tanggalDijadwalkan: new Date(data.tanggalDijadwalkan),
+      images: photos.length > 0 ? photos : undefined,
     };
 
     // Only include recurringInterval if isRecurring is true
@@ -96,12 +127,17 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
 
     onSubmit(submitData);
     reset();
+    setPhotos([]);
   };
 
   const handleClose = () => {
     reset();
+    setPhotos([]);
     onClose();
   };
+
+  // Get the actual garden ID for folder path
+  const actualGardenId = gardenId || maintenance?.gardenId || "unknown";
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -122,7 +158,9 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
               </Label>
               <Select
                 value={jenisPerawatan}
-                onValueChange={(value: any) => setValue("jenisPerawatan", value)}
+                onValueChange={(value: any) =>
+                  setValue("jenisPerawatan", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -136,7 +174,9 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
                 </SelectContent>
               </Select>
               {errors.jenisPerawatan && (
-                <p className="text-sm text-red-500 mt-1">{errors.jenisPerawatan.message}</p>
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.jenisPerawatan.message}
+                </p>
               )}
             </div>
 
@@ -158,7 +198,9 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
                 </SelectContent>
               </Select>
               {errors.status && (
-                <p className="text-sm text-red-500 mt-1">{errors.status.message}</p>
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.status.message}
+                </p>
               )}
             </div>
           </div>
@@ -186,10 +228,13 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
             <Input
               id="tanggalDijadwalkan"
               type="date"
+              className="h-11 md:h-10 text-base md:text-sm"
               {...register("tanggalDijadwalkan")}
             />
             {errors.tanggalDijadwalkan && (
-              <p className="text-sm text-red-500 mt-1">{errors.tanggalDijadwalkan.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.tanggalDijadwalkan.message}
+              </p>
             )}
           </div>
 
@@ -203,7 +248,9 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
               {...register("detail")}
             />
             {errors.detail && (
-              <p className="text-sm text-red-500 mt-1">{errors.detail.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.detail.message}
+              </p>
             )}
           </div>
 
@@ -216,7 +263,9 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
               {...register("penanggungJawab")}
             />
             {errors.penanggungJawab && (
-              <p className="text-sm text-red-500 mt-1">{errors.penanggungJawab.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.penanggungJawab.message}
+              </p>
             )}
           </div>
 
@@ -225,7 +274,9 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
             <Checkbox
               id="isRecurring"
               checked={isRecurring}
-              onCheckedChange={(checked) => setValue("isRecurring", checked as boolean)}
+              onCheckedChange={(checked) =>
+                setValue("isRecurring", checked as boolean)
+              }
             />
             <Label
               htmlFor="isRecurring"
@@ -249,10 +300,26 @@ export default function EditMaintenanceModal({ open, onClose, onSubmit, maintena
                 {...register("recurringInterval", { valueAsNumber: true })}
               />
               {errors.recurringInterval && (
-                <p className="text-sm text-red-500 mt-1">{errors.recurringInterval.message}</p>
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.recurringInterval.message}
+                </p>
               )}
             </div>
           )}
+
+          {/* Foto Perawatan */}
+          <div>
+            <Label>Foto Dokumentasi (Opsional)</Label>
+            <p className="text-xs text-gray-500 mb-2">
+              Upload foto sebelum/sesudah perawatan (max 4 foto)
+            </p>
+            <MultiImageUpload
+              value={photos}
+              onChange={setPhotos}
+              folder={`maintenances/${actualGardenId}/${maintenance?.id || Date.now()}`}
+              maxImages={4}
+            />
+          </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>

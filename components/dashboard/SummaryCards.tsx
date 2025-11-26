@@ -40,24 +40,24 @@ export default function SummaryCards({
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
       {cards.map((card, index) => {
         const Icon = card.icon;
         return (
-          <Card key={index}>
-            <CardContent className="p-6">
+          <Card key={index} className="hover:shadow-md transition-shadow">
+            <CardContent className="p-4 md:p-6">
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs md:text-sm font-medium text-gray-600 truncate">
                     {card.title}
                   </p>
-                  <p className="text-2xl font-bold text-gray-900 mt-2">
+                  <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1 md:mt-2">
                     {card.value}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">{card.subtitle}</p>
+                  <p className="text-xs text-gray-500 mt-0.5 md:mt-1 truncate">{card.subtitle}</p>
                 </div>
-                <div className={`${card.bgColor} p-3 rounded-lg`}>
-                  <Icon className={`h-6 w-6 ${card.color}`} />
+                <div className={`${card.bgColor} p-2 md:p-3 rounded-lg flex-shrink-0`}>
+                  <Icon className={`h-5 w-5 md:h-6 md:w-6 ${card.color}`} />
                 </div>
               </div>
             </CardContent>

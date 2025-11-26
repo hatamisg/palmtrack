@@ -80,6 +80,7 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
     const { data, error } = await createIssue({
       ...issueData,
       gardenId,
+      foto: issueData.fotoUrls || [],
     });
 
     if (data) {
@@ -295,6 +296,7 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddIssue}
+        gardenId={gardenId}
       />
 
       <EditIssueModal
@@ -305,6 +307,7 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
         }}
         onSubmit={handleEditIssue}
         issue={selectedIssue}
+        gardenId={gardenId}
       />
 
       {/* Delete Confirmation Dialog */}

@@ -94,6 +94,7 @@ export default function AddHarvestModal({ open, onClose, onSubmit }: AddHarvestM
             <Input
               id="tanggal"
               type="date"
+              className="h-11 md:h-10 text-base md:text-sm"
               {...register("tanggal")}
             />
             {errors.tanggal && (

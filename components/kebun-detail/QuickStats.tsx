@@ -46,21 +46,21 @@ export default function QuickStats({
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
-          <Card key={index}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-2">
+          <Card key={index} className="hover:shadow-md transition-shadow">
+            <CardContent className="p-3 md:p-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs md:text-sm font-medium text-gray-600 truncate">{stat.label}</p>
+                  <p className="text-lg md:text-2xl font-bold text-gray-900 mt-1 md:mt-2 truncate">
                     {stat.value}
                   </p>
                 </div>
-                <div className={`${stat.bgColor} p-3 rounded-lg`}>
-                  <Icon className={`h-6 w-6 ${stat.color}`} />
+                <div className={`${stat.bgColor} p-2 md:p-3 rounded-lg self-end md:self-auto flex-shrink-0`}>
+                  <Icon className={`h-4 w-4 md:h-6 md:w-6 ${stat.color}`} />
                 </div>
               </div>
             </CardContent>

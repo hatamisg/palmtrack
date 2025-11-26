@@ -10,13 +10,14 @@ interface ProvidersProps {
 }
 
 export function Providers({ children }: ProvidersProps) {
-  // Create QueryClient instance
+  // Create QueryClient instance with optimized settings
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000, // 1 minute
-        gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
+        staleTime: 2 * 60 * 1000, // 2 minutes - data stays fresh longer
+        gcTime: 10 * 60 * 1000, // 10 minutes - keep in cache longer
         refetchOnWindowFocus: false,
+        refetchOnReconnect: true,
         retry: 1,
       },
     },

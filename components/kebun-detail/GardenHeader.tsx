@@ -26,50 +26,52 @@ export default function GardenHeader({ garden, onEdit }: GardenHeaderProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+    <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 md:mb-6">
       {/* Breadcrumb */}
-      <div className="flex items-center text-sm text-gray-600 mb-4">
-        <Link href="/" className="hover:text-primary">
+      <div className="flex items-center text-xs md:text-sm text-gray-600 mb-3 md:mb-4 overflow-x-auto hide-scrollbar">
+        <Link href="/" className="hover:text-primary whitespace-nowrap">
           Dashboard
         </Link>
-        <ChevronRight className="h-4 w-4 mx-2" />
-        <Link href="/kebun" className="hover:text-primary">
+        <ChevronRight className="h-3 w-3 md:h-4 md:w-4 mx-1 md:mx-2 flex-shrink-0" />
+        <Link href="/kebun" className="hover:text-primary whitespace-nowrap">
           Kebun Saya
         </Link>
-        <ChevronRight className="h-4 w-4 mx-2" />
-        <span className="text-gray-900 font-medium">{garden.nama}</span>
+        <ChevronRight className="h-3 w-3 md:h-4 md:w-4 mx-1 md:mx-2 flex-shrink-0" />
+        <span className="text-gray-900 font-medium truncate">{garden.nama}</span>
       </div>
 
       {/* Header Content */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold text-gray-900">{garden.nama}</h1>
-            <Badge variant={getStatusColor(garden.status)}>{garden.status}</Badge>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center text-gray-600">
-              <MapPin className="h-4 w-4 mr-2" />
-              <span className="text-sm">{garden.lokasiLengkap}</span>
+      <div className="flex flex-col gap-3 md:gap-4">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 md:gap-3 mb-2">
+              <h1 className="text-xl md:text-3xl font-bold text-gray-900 truncate">{garden.nama}</h1>
+              <Badge variant={getStatusColor(garden.status)} className="flex-shrink-0 text-xs">
+                {garden.status}
+              </Badge>
             </div>
-            <div className="flex items-center gap-4 text-sm text-gray-500">
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1" />
-                Tanam: {garden.tahunTanam}
+
+            <div className="space-y-1.5 md:space-y-2">
+              <div className="flex items-start text-gray-600">
+                <MapPin className="h-3 w-3 md:h-4 md:w-4 mr-1.5 md:mr-2 flex-shrink-0 mt-0.5" />
+                <span className="text-xs md:text-sm line-clamp-2">{garden.lokasiLengkap}</span>
               </div>
-              <span>•</span>
-              <div>Varietas: {garden.varietas}</div>
-              <span>•</span>
-              <div>Update: {format(new Date(garden.updatedAt), "d MMM yyyy", { locale: id })}</div>
+              <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm text-gray-500">
+                <div className="flex items-center whitespace-nowrap">
+                  <Calendar className="h-3 w-3 md:h-4 md:w-4 mr-1 flex-shrink-0" />
+                  Tanam: {garden.tahunTanam}
+                </div>
+                <span className="hidden md:inline">•</span>
+                <div className="whitespace-nowrap">Varietas: {garden.varietas}</div>
+                <span className="hidden md:inline">•</span>
+                <div className="whitespace-nowrap">Update: {format(new Date(garden.updatedAt), "d MMM yyyy", { locale: id })}</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={onEdit}>
-            <Edit className="h-4 w-4 mr-2" />
-            Edit
+          <Button variant="outline" size="sm" onClick={onEdit} className="flex-shrink-0 h-9">
+            <Edit className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+            <span className="hidden md:inline">Edit</span>
           </Button>
         </div>
       </div>

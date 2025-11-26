@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MultiImageUpload } from "@/components/ui/multi-image-upload";
 import { Issue } from "@/types";
 
 const issueSchema = z.object({
@@ -27,7 +34,6 @@ const issueSchema = z.object({
   status: z.enum(["Open", "Resolved"]),
   tanggalLapor: z.string().min(1, "Tanggal lapor wajib diisi"),
   solusi: z.string().optional(),
-  fotoUrls: z.string().optional(), // Placeholder for future file upload
 });
 
 type IssueFormData = z.infer<typeof issueSchema>;
@@ -35,11 +41,22 @@ type IssueFormData = z.infer<typeof issueSchema>;
 interface EditIssueModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Issue, "id" | "gardenId" | "createdAt" | "updatedAt">) => void;
+  onSubmit: (
+    data: Omit<Issue, "id" | "gardenId" | "createdAt" | "updatedAt">
+  ) => void;
   issue: Issue | null;
+  gardenId: string;
 }
 
-export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditIssueModalProps) {
+export default function EditIssueModal({
+  open,
+  onClose,
+  onSubmit,
+  issue,
+  gardenId,
+}: EditIssueModalProps) {
+  const [photos, setPhotos] = useState<string[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -57,7 +74,6 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
       status: "Open",
       tanggalLapor: "",
       solusi: "",
-      fotoUrls: "",
     },
   });
 
@@ -72,12 +88,14 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
       setValue("areaTerdampak", issue.areaTerdampak);
       setValue("tingkatKeparahan", issue.tingkatKeparahan);
       setValue("status", issue.status);
-      setValue("tanggalLapor", issue.tanggalLapor instanceof Date
-        ? issue.tanggalLapor.toISOString().split('T')[0]
-        : issue.tanggalLapor as string
+      setValue(
+        "tanggalLapor",
+        issue.tanggalLapor instanceof Date
+          ? issue.tanggalLapor.toISOString().split("T")[0]
+          : (issue.tanggalLapor as string)
       );
       setValue("solusi", issue.solusi || "");
-      setValue("fotoUrls", issue.fotoUrls && issue.fotoUrls.length > 0 ? issue.fotoUrls[0] : "");
+      setPhotos(issue.fotoUrls || []);
     }
   }, [issue, setValue]);
 
@@ -85,14 +103,16 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
     onSubmit({
       ...data,
       tanggalLapor: new Date(data.tanggalLapor),
-      fotoUrls: data.fotoUrls ? [data.fotoUrls] : undefined,
+      fotoUrls: photos.length > 0 ? photos : undefined,
       tanggalSelesai: data.status === "Resolved" ? new Date() : undefined,
     } as any);
     reset();
+    setPhotos([]);
   };
 
   const handleClose = () => {
     reset();
+    setPhotos([]);
     onClose();
   };
 
@@ -134,7 +154,9 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
               {...register("deskripsi")}
             />
             {errors.deskripsi && (
-              <p className="text-sm text-red-500 mt-1">{errors.deskripsi.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.deskripsi.message}
+              </p>
             )}
           </div>
 
@@ -149,7 +171,9 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
               {...register("areaTerdampak")}
             />
             {errors.areaTerdampak && (
-              <p className="text-sm text-red-500 mt-1">{errors.areaTerdampak.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.areaTerdampak.message}
+              </p>
             )}
           </div>
 
@@ -161,7 +185,9 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
               </Label>
               <Select
                 value={tingkatKeparahan}
-                onValueChange={(value: any) => setValue("tingkatKeparahan", value)}
+                onValueChange={(value: any) =>
+                  setValue("tingkatKeparahan", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -173,7 +199,9 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
                 </SelectContent>
               </Select>
               {errors.tingkatKeparahan && (
-                <p className="text-sm text-red-500 mt-1">{errors.tingkatKeparahan.message}</p>
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.tingkatKeparahan.message}
+                </p>
               )}
             </div>
 
@@ -194,7 +222,9 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
                 </SelectContent>
               </Select>
               {errors.status && (
-                <p className="text-sm text-red-500 mt-1">{errors.status.message}</p>
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.status.message}
+                </p>
               )}
             </div>
           </div>
@@ -210,7 +240,9 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
               {...register("tanggalLapor")}
             />
             {errors.tanggalLapor && (
-              <p className="text-sm text-red-500 mt-1">{errors.tanggalLapor.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.tanggalLapor.message}
+              </p>
             )}
           </div>
 
@@ -224,24 +256,24 @@ export default function EditIssueModal({ open, onClose, onSubmit, issue }: EditI
               {...register("solusi")}
             />
             {errors.solusi && (
-              <p className="text-sm text-red-500 mt-1">{errors.solusi.message}</p>
+              <p className="text-sm text-red-500 mt-1">
+                {errors.solusi.message}
+              </p>
             )}
           </div>
 
-          {/* Foto URLs - Placeholder */}
+          {/* Foto Masalah */}
           <div>
-            <Label htmlFor="fotoUrls">Foto URL (Opsional - Placeholder)</Label>
-            <Input
-              id="fotoUrls"
-              placeholder="https://example.com/image.jpg"
-              {...register("fotoUrls")}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Fitur upload foto akan ditambahkan di masa mendatang
+            <Label>Foto Dokumentasi (Opsional)</Label>
+            <p className="text-xs text-gray-500 mb-2">
+              Upload foto untuk dokumentasi masalah (max 5 foto)
             </p>
-            {errors.fotoUrls && (
-              <p className="text-sm text-red-500 mt-1">{errors.fotoUrls.message}</p>
-            )}
+            <MultiImageUpload
+              value={photos}
+              onChange={setPhotos}
+              folder={`issues/${gardenId}/${issue?.id || Date.now()}`}
+              maxImages={5}
+            />
           </div>
 
           <DialogFooter>

@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Calendar, AlertCircle, Wrench } from 'lucide-react';
+import { Calendar, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getTodosGroupedByDate, TodosByDate } from '@/lib/supabase/api/todos';
 import { TodoItem } from '@/types';
-import { format } from 'date-fns';
-import { id as localeId } from 'date-fns/locale';
+import SwipeableTodoItem from './SwipeableTodoItem';
 
 interface TodoListNewProps {
   limit?: number; // Limit total items to display
@@ -40,85 +38,20 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
     }
   };
 
+  const handleCompleteTodo = async (id: string) => {
+    // TODO: Implement actual completion logic with API
+    console.log('Completing todo:', id);
+    // For now, just reload todos
+    await loadTodos();
+  };
+
   const renderTodoItem = (todo: TodoItem) => {
-    const isIssue = todo.type === 'issue';
-    const isMaintenance = todo.type === 'maintenance';
-
-    // Determine priority/severity for styling
-    const isHighPriority =
-      isIssue && todo.kategori === 'Parah';
-    const isMediumPriority =
-      isIssue && todo.kategori === 'Sedang';
-
-    // Determine link based on type
-    const targetTab = isIssue ? 'masalah' : 'perawatan';
-    const link = `/kebun/${todo.gardenSlug}?tab=${targetTab}`;
-
     return (
-      <Link
+      <SwipeableTodoItem
         key={todo.id}
-        href={link}
-        className="block p-3 border rounded-lg hover:bg-muted/50 transition-colors"
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-3 flex-1 min-w-0">
-            {/* Icon */}
-            <div className="flex-shrink-0 mt-0.5">
-              {isIssue ? (
-                <AlertCircle
-                  className={`h-5 w-5 ${
-                    isHighPriority
-                      ? 'text-red-500'
-                      : isMediumPriority
-                      ? 'text-orange-500'
-                      : 'text-yellow-500'
-                  }`}
-                />
-              ) : (
-                <Wrench className="h-5 w-5 text-blue-500" />
-              )}
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-sm truncate">{todo.judul}</h4>
-              <p className="text-xs text-muted-foreground mt-1">
-                {todo.gardenName}
-                {todo.areaTerdampak && ` • Area: ${todo.areaTerdampak}`}
-                {todo.penanggungJawab && ` • PJ: ${todo.penanggungJawab}`}
-              </p>
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                <Badge
-                  variant={isIssue ? 'destructive' : 'default'}
-                  className="text-xs"
-                >
-                  {isIssue ? 'Masalah' : 'Perawatan'}
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  {todo.kategori}
-                </Badge>
-                {todo.status && (
-                  <Badge
-                    variant={
-                      todo.status === 'Terlambat' ? 'destructive' : 'secondary'
-                    }
-                    className="text-xs"
-                  >
-                    {todo.status}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Date */}
-          <div className="flex-shrink-0 text-right">
-            <div className="text-xs text-muted-foreground">
-              {format(new Date(todo.tanggal), 'dd MMM', { locale: localeId })}
-            </div>
-          </div>
-        </div>
-      </Link>
+        todo={todo}
+        onComplete={handleCompleteTodo}
+      />
     );
   };
 
@@ -196,7 +129,7 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Daftar To-Do
+            Daftar Tugas
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -214,7 +147,7 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Daftar To-Do
+            Daftar Tugas
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -234,17 +167,17 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+      <CardHeader className="pb-3 md:pb-6">
+        <CardTitle className="flex items-center justify-between text-base md:text-lg">
           <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Daftar To-Do
+            <Calendar className="h-4 w-4 md:h-5 md:w-5" />
+            Daftar Tugas
           </div>
-          <Badge variant="secondary">{allTodos.length} item</Badge>
+          <Badge variant="secondary" className="text-xs">{allTodos.length} item</Badge>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+      <CardContent className="px-3 md:px-6">
+        <div className="space-y-3 md:space-y-4 max-h-[500px] md:max-h-[600px] overflow-y-auto pr-1 md:pr-2 smooth-scroll">
           {renderSection(
             'Terlambat',
             limitedGrouped.overdue,

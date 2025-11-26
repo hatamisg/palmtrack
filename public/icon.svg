@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="#10b981"/>
+  
+  <!-- Palm Tree Icon -->
+  <g transform="translate(256, 256)">
+    <!-- Trunk -->
+    <rect x="-20" y="40" width="40" height="140" rx="8" fill="#92400e"/>
+    
+    <!-- Leaves -->
+    <!-- Left leaf -->
+    <ellipse cx="-80" cy="0" rx="100" ry="40" fill="#059669" transform="rotate(-30 -80 0)"/>
+    <!-- Right leaf -->
+    <ellipse cx="80" cy="0" rx="100" ry="40" fill="#059669" transform="rotate(30 80 0)"/>
+    <!-- Top leaf -->
+    <ellipse cx="0" cy="-60" rx="40" ry="100" fill="#10b981"/>
+    <!-- Center leaf -->
+    <ellipse cx="0" cy="20" rx="90" ry="35" fill="#059669"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">PalmTrack</text>
+</svg>

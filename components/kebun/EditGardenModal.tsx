@@ -15,8 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { Garden } from "@/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { generateSlug } from "@/lib/utils";
 
 const gardenSchema = z.object({
@@ -40,6 +41,8 @@ interface EditGardenModalProps {
 }
 
 export default function EditGardenModal({ open, onClose, onSubmit, garden }: EditGardenModalProps) {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  
   const {
     register,
     handleSubmit,
@@ -75,18 +78,21 @@ export default function EditGardenModal({ open, onClose, onSubmit, garden }: Edi
       setValue("tahunTanam", garden.tahunTanam);
       setValue("varietas", garden.varietas);
       setValue("status", garden.status);
+      setImageUrl(garden.imageUrl || null);
     }
   }, [garden, setValue]);
 
   const onFormSubmit = (data: GardenFormData) => {
     // Generate new slug if name changed, otherwise keep existing slug
     const slug = data.nama !== garden?.nama ? generateSlug(data.nama) : (garden?.slug || generateSlug(data.nama));
-    onSubmit({ ...data, slug });
+    onSubmit({ ...data, slug, imageUrl: imageUrl || undefined } as any);
     reset();
+    setImageUrl(null);
   };
 
   const handleClose = () => {
     reset();
+    setImageUrl(null);
     onClose();
   };
 
@@ -101,6 +107,19 @@ export default function EditGardenModal({ open, onClose, onSubmit, garden }: Edi
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+          {/* Garden Image */}
+          <div>
+            <Label>Foto Kebun</Label>
+            <ImageUpload
+              value={imageUrl}
+              onChange={setImageUrl}
+              folder={`gardens/${garden?.id || 'new'}`}
+              aspectRatio="video"
+              placeholder="Upload foto kebun"
+              className="mt-2"
+            />
+          </div>
+
           {/* Nama Kebun */}
           <div>
             <Label htmlFor="nama">
