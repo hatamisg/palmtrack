@@ -105,12 +105,14 @@ export interface TodoItem {
   gardenId: string;
   gardenName: string;
   gardenSlug: string;
-  type: 'maintenance' | 'issue';
+  type: 'maintenance' | 'issue' | 'task';
   judul: string;
   tanggal: Date;
-  kategori: string; // jenis_perawatan untuk maintenance, tingkat_keparahan untuk issue
+  kategori: string; // jenis_perawatan untuk maintenance, tingkat_keparahan untuk issue, kategori untuk task
   status: string;
+  prioritas?: 'High' | 'Normal' | 'Low'; // untuk task
   penanggungJawab?: string; // untuk maintenance
+  assignedTo?: string; // untuk task
   areaTerdampak?: string; // untuk issue
   deskripsi?: string;
 }

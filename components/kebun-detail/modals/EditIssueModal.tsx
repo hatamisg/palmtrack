@@ -118,70 +118,73 @@ export default function EditIssueModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Masalah</DialogTitle>
-          <DialogDescription>
-            Perbarui informasi masalah {issue?.judul}
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto rounded-2xl">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-base sm:text-lg">Edit Masalah</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
+            Perbarui informasi masalah
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           {/* Judul */}
-          <div>
-            <Label htmlFor="judul">
+          <div className="space-y-1.5">
+            <Label htmlFor="judul" className="text-xs sm:text-sm font-medium">
               Judul Masalah <span className="text-red-500">*</span>
             </Label>
             <Input
               id="judul"
-              placeholder="Contoh: Serangan Hama di Area A"
+              placeholder="Serangan Hama di Area A"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("judul")}
             />
             {errors.judul && (
-              <p className="text-sm text-red-500 mt-1">{errors.judul.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.judul.message}</p>
             )}
           </div>
 
           {/* Deskripsi */}
-          <div>
-            <Label htmlFor="deskripsi">
+          <div className="space-y-1.5">
+            <Label htmlFor="deskripsi" className="text-xs sm:text-sm font-medium">
               Deskripsi <span className="text-red-500">*</span>
             </Label>
             <Textarea
               id="deskripsi"
               placeholder="Jelaskan masalah secara detail..."
-              rows={3}
+              rows={2}
+              className="text-base sm:text-sm rounded-xl resize-none"
               {...register("deskripsi")}
             />
             {errors.deskripsi && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-xs text-red-500 mt-1">
                 {errors.deskripsi.message}
               </p>
             )}
           </div>
 
           {/* Area Terdampak */}
-          <div>
-            <Label htmlFor="areaTerdampak">
+          <div className="space-y-1.5">
+            <Label htmlFor="areaTerdampak" className="text-xs sm:text-sm font-medium">
               Area Terdampak <span className="text-red-500">*</span>
             </Label>
             <Input
               id="areaTerdampak"
-              placeholder="Contoh: Blok A, Baris 5-10"
+              placeholder="Blok A, Baris 5-10"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("areaTerdampak")}
             />
             {errors.areaTerdampak && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-xs text-red-500 mt-1">
                 {errors.areaTerdampak.message}
               </p>
             )}
           </div>
 
           {/* Tingkat Keparahan & Status Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="tingkatKeparahan">
-                Tingkat Keparahan <span className="text-red-500">*</span>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="tingkatKeparahan" className="text-xs sm:text-sm font-medium">
+                Keparahan <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={tingkatKeparahan}
@@ -189,7 +192,7 @@ export default function EditIssueModal({
                   setValue("tingkatKeparahan", value)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -198,22 +201,17 @@ export default function EditIssueModal({
                   <SelectItem value="Ringan">Ringan</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.tingkatKeparahan && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.tingkatKeparahan.message}
-                </p>
-              )}
             </div>
 
-            <div>
-              <Label htmlFor="status">
+            <div className="space-y-1.5">
+              <Label htmlFor="status" className="text-xs sm:text-sm font-medium">
                 Status <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={status}
                 onValueChange={(value: any) => setValue("status", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -221,52 +219,39 @@ export default function EditIssueModal({
                   <SelectItem value="Resolved">Resolved</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.status && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.status.message}
-                </p>
-              )}
             </div>
           </div>
 
           {/* Tanggal Lapor */}
-          <div>
-            <Label htmlFor="tanggalLapor">
+          <div className="space-y-1.5">
+            <Label htmlFor="tanggalLapor" className="text-xs sm:text-sm font-medium">
               Tanggal Lapor <span className="text-red-500">*</span>
             </Label>
             <Input
               id="tanggalLapor"
               type="date"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("tanggalLapor")}
             />
-            {errors.tanggalLapor && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.tanggalLapor.message}
-              </p>
-            )}
           </div>
 
           {/* Solusi */}
-          <div>
-            <Label htmlFor="solusi">Solusi (Opsional)</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="solusi" className="text-xs sm:text-sm font-medium">Solusi (Opsional)</Label>
             <Textarea
               id="solusi"
-              placeholder="Langkah-langkah penyelesaian yang telah atau akan dilakukan..."
-              rows={3}
+              placeholder="Langkah penyelesaian..."
+              rows={2}
+              className="text-base sm:text-sm rounded-xl resize-none"
               {...register("solusi")}
             />
-            {errors.solusi && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.solusi.message}
-              </p>
-            )}
           </div>
 
           {/* Foto Masalah */}
-          <div>
-            <Label>Foto Dokumentasi (Opsional)</Label>
-            <p className="text-xs text-gray-500 mb-2">
-              Upload foto untuk dokumentasi masalah (max 5 foto)
+          <div className="space-y-1.5">
+            <Label className="text-xs sm:text-sm font-medium">Foto Dokumentasi</Label>
+            <p className="text-[10px] sm:text-xs text-gray-500 mb-2">
+              Upload foto dokumentasi (max 5 foto)
             </p>
             <MultiImageUpload
               value={photos}
@@ -276,11 +261,21 @@ export default function EditIssueModal({
             />
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleClose}
+              className="h-11 rounded-xl w-full sm:w-auto"
+            >
               Batal
             </Button>
-            <Button type="submit">Simpan Perubahan</Button>
+            <Button 
+              type="submit"
+              className="h-11 rounded-xl w-full sm:w-auto bg-green-600 hover:bg-green-700"
+            >
+              Simpan Perubahan
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

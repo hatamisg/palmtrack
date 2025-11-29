@@ -76,55 +76,54 @@ export default function AddTaskModal({ open, onClose, onSubmit }: AddTaskModalPr
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Tambah Task Baru</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto rounded-2xl">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-base sm:text-lg">Tambah Task Baru</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Isi form di bawah untuk menambahkan task baru
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           {/* Judul */}
-          <div>
-            <Label htmlFor="judul">
+          <div className="space-y-1.5">
+            <Label htmlFor="judul" className="text-xs sm:text-sm font-medium">
               Judul Task <span className="text-red-500">*</span>
             </Label>
             <Input
               id="judul"
               placeholder="Contoh: Pemupukan area A"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("judul")}
             />
             {errors.judul && (
-              <p className="text-sm text-red-500 mt-1">{errors.judul.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.judul.message}</p>
             )}
           </div>
 
           {/* Deskripsi */}
-          <div>
-            <Label htmlFor="deskripsi">Deskripsi</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="deskripsi" className="text-xs sm:text-sm font-medium">Deskripsi</Label>
             <Textarea
               id="deskripsi"
               placeholder="Deskripsi detail task..."
-              rows={3}
+              rows={2}
+              className="text-base sm:text-sm rounded-xl resize-none"
               {...register("deskripsi")}
             />
-            {errors.deskripsi && (
-              <p className="text-sm text-red-500 mt-1">{errors.deskripsi.message}</p>
-            )}
           </div>
 
           {/* Kategori & Prioritas Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="kategori">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="kategori" className="text-xs sm:text-sm font-medium">
                 Kategori <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={kategori}
                 onValueChange={(value: any) => setValue("kategori", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -135,20 +134,17 @@ export default function AddTaskModal({ open, onClose, onSubmit }: AddTaskModalPr
                   <SelectItem value="Lainnya">Lainnya</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.kategori && (
-                <p className="text-sm text-red-500 mt-1">{errors.kategori.message}</p>
-              )}
             </div>
 
-            <div>
-              <Label htmlFor="prioritas">
+            <div className="space-y-1.5">
+              <Label htmlFor="prioritas" className="text-xs sm:text-sm font-medium">
                 Prioritas <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={prioritas}
                 onValueChange={(value: any) => setValue("prioritas", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -157,23 +153,20 @@ export default function AddTaskModal({ open, onClose, onSubmit }: AddTaskModalPr
                   <SelectItem value="Low">Low</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.prioritas && (
-                <p className="text-sm text-red-500 mt-1">{errors.prioritas.message}</p>
-              )}
             </div>
           </div>
 
           {/* Status & Tanggal Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="status">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="status" className="text-xs sm:text-sm font-medium">
                 Status <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={status}
                 onValueChange={(value: any) => setValue("status", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -182,44 +175,47 @@ export default function AddTaskModal({ open, onClose, onSubmit }: AddTaskModalPr
                   <SelectItem value="Done">Done</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.status && (
-                <p className="text-sm text-red-500 mt-1">{errors.status.message}</p>
-              )}
             </div>
 
-            <div>
-              <Label htmlFor="tanggalTarget">
+            <div className="space-y-1.5">
+              <Label htmlFor="tanggalTarget" className="text-xs sm:text-sm font-medium">
                 Tanggal Target <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="tanggalTarget"
                 type="date"
+                className="h-11 text-base sm:text-sm rounded-xl"
                 {...register("tanggalTarget")}
               />
-              {errors.tanggalTarget && (
-                <p className="text-sm text-red-500 mt-1">{errors.tanggalTarget.message}</p>
-              )}
             </div>
           </div>
 
           {/* Assigned To */}
-          <div>
-            <Label htmlFor="assignedTo">Ditugaskan Kepada</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="assignedTo" className="text-xs sm:text-sm font-medium">Ditugaskan Kepada</Label>
             <Input
               id="assignedTo"
               placeholder="Nama penanggung jawab (opsional)"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("assignedTo")}
             />
-            {errors.assignedTo && (
-              <p className="text-sm text-red-500 mt-1">{errors.assignedTo.message}</p>
-            )}
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleClose}
+              className="h-11 rounded-xl w-full sm:w-auto"
+            >
               Batal
             </Button>
-            <Button type="submit">Simpan</Button>
+            <Button 
+              type="submit"
+              className="h-11 rounded-xl w-full sm:w-auto bg-green-600 hover:bg-green-700"
+            >
+              Simpan
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

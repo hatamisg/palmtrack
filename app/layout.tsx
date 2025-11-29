@@ -7,21 +7,21 @@ import { OfflineIndicator } from "@/components/ui/offline-indicator";
 import { Providers } from "@/lib/providers";
 
 export const metadata: Metadata = {
-  title: "PalmTrack - Garden Planner & Management",
+  title: "Sawit Saku - Manajemen Kebun",
   description: "Aplikasi manajemen kebun kelapa sawit",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "PalmTrack",
+    title: "Sawit Saku",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "PalmTrack",
-    title: "PalmTrack - Garden Management",
+    siteName: "Sawit Saku",
+    title: "Sawit Saku - Manajemen Kebun",
     description: "Aplikasi manajemen kebun kelapa sawit",
   },
 };

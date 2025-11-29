@@ -151,25 +151,27 @@ export default function TabTask({ gardenId, tasks: initialTasks }: TabTaskProps)
   return (
     <div className="space-y-6">
       {/* Header & Filters */}
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-primary" />
-              Task Management
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-2 sm:pb-3">
+          <div className="flex items-center justify-between gap-3">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <div className="bg-purple-100 p-1.5 sm:p-2 rounded-lg">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+              </div>
+              Task
             </CardTitle>
-            <Button onClick={() => setIsAddModalOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Tambah Task
+            <Button onClick={() => setIsAddModalOpen(true)} size="sm" className="h-9 rounded-xl bg-green-600 hover:bg-green-700">
+              <Plus className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Tambah</span>
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row gap-3">
+        <CardContent className="pt-0">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500" />
+              <Filter className="h-4 w-4 text-gray-500 hidden sm:block" />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="h-10 sm:h-11 w-full sm:w-40 rounded-xl text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -181,7 +183,7 @@ export default function TabTask({ gardenId, tasks: initialTasks }: TabTaskProps)
               </Select>
             </div>
             <Select value={kategoriFilter} onValueChange={setKategoriFilter}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="h-10 sm:h-11 w-full sm:w-40 rounded-xl text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -196,59 +198,59 @@ export default function TabTask({ gardenId, tasks: initialTasks }: TabTaskProps)
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600">To Do</p>
-              <p className="text-2xl font-bold text-gray-900">{tasksByStatus["To Do"].length}</p>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6">
+            <div className="text-center p-2.5 sm:p-3 bg-gray-50 rounded-xl">
+              <p className="text-[10px] sm:text-sm text-gray-600">To Do</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-900">{tasksByStatus["To Do"].length}</p>
             </div>
-            <div className="text-center p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-gray-600">In Progress</p>
-              <p className="text-2xl font-bold text-blue-600">{tasksByStatus["In Progress"].length}</p>
+            <div className="text-center p-2.5 sm:p-3 bg-blue-50 rounded-xl">
+              <p className="text-[10px] sm:text-sm text-gray-600">In Progress</p>
+              <p className="text-lg sm:text-2xl font-bold text-blue-600">{tasksByStatus["In Progress"].length}</p>
             </div>
-            <div className="text-center p-3 bg-green-50 rounded-lg">
-              <p className="text-sm text-gray-600">Done</p>
-              <p className="text-2xl font-bold text-green-600">{tasksByStatus["Done"].length}</p>
+            <div className="text-center p-2.5 sm:p-3 bg-green-50 rounded-xl">
+              <p className="text-[10px] sm:text-sm text-gray-600">Done</p>
+              <p className="text-lg sm:text-2xl font-bold text-green-600">{tasksByStatus["Done"].length}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Task Lists by Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Task Lists by Status - Stacked on mobile */}
+      <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-4">
         {Object.entries(tasksByStatus).map(([status, statusTasks]) => (
-          <Card key={status}>
-            <CardHeader>
-              <CardTitle className="text-lg">{status}</CardTitle>
+          <Card key={status} className="border-0 shadow-sm">
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="text-sm sm:text-base">{status}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               {statusTasks.length === 0 ? (
-                <p className="text-center text-gray-500 py-8 text-sm">
+                <p className="text-center text-gray-500 py-6 sm:py-8 text-xs sm:text-sm">
                   Tidak ada task
                 </p>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {statusTasks.map((task) => (
                     <div
                       key={task.id}
-                      className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
+                      className="p-3 sm:p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors border border-gray-100"
                     >
-                      <div className="flex items-start gap-3 mb-3">
+                      <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
                         <input
                           type="checkbox"
                           checked={task.status === "Done"}
                           onChange={() => handleToggleStatus(task)}
-                          className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                          className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                         />
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <h4
-                            className={`font-medium text-gray-900 ${
+                            className={`text-sm font-medium text-gray-900 ${
                               task.status === "Done" ? "line-through text-gray-500" : ""
                             }`}
                           >
                             {task.judul}
                           </h4>
                           {task.deskripsi && (
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">
                               {task.deskripsi}
                             </p>
                           )}
@@ -258,31 +260,31 @@ export default function TabTask({ gardenId, tasks: initialTasks }: TabTaskProps)
                             size="sm"
                             variant="ghost"
                             onClick={() => openEditModal(task)}
-                            className="h-8 w-8 p-0"
+                            className="h-7 w-7 sm:h-8 sm:w-8 p-0"
                           >
-                            <Edit className="h-3.5 w-3.5" />
+                            <Edit className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                           </Button>
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => setTaskToDelete(task.id)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="h-7 w-7 sm:h-8 sm:w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                           </Button>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Badge variant={getPriorityColor(task.prioritas)} className="text-xs">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Badge variant={getPriorityColor(task.prioritas)} className="text-[10px] sm:text-xs h-5">
                           {task.prioritas}
                         </Badge>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-[10px] sm:text-xs h-5 bg-white">
                           {task.kategori}
                         </Badge>
                       </div>
 
-                      <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
+                      <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 mt-2">
                         <Clock className="h-3 w-3" />
                         <span>
                           Target: {format(new Date(task.tanggalTarget), "d MMM yyyy", { locale: id })}
@@ -290,7 +292,7 @@ export default function TabTask({ gardenId, tasks: initialTasks }: TabTaskProps)
                       </div>
 
                       {task.assignedTo && (
-                        <div className="text-xs text-gray-500 mt-1">
+                        <div className="text-[10px] sm:text-xs text-gray-500 mt-1">
                           Ditugaskan: {task.assignedTo}
                         </div>
                       )}

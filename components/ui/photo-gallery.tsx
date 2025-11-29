@@ -10,10 +10,12 @@ interface PhotoGalleryProps {
   photos: string[];
   className?: string;
   maxVisible?: number;
+  expandInPlace?: boolean;
 }
 
-export function PhotoGallery({ photos, className, maxVisible = 3 }: PhotoGalleryProps) {
+export function PhotoGallery({ photos, className, maxVisible = 3, expandInPlace = false }: PhotoGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   if (!photos || photos.length === 0) return null;
 
@@ -35,6 +37,49 @@ export function PhotoGallery({ photos, className, maxVisible = 3 }: PhotoGallery
     }
   };
 
+  const handleClick = (index: number) => {
+    if (expandInPlace) {
+      setExpandedIndex(expandedIndex === index ? null : index);
+    } else {
+      openLightbox(index);
+    }
+  };
+
+  // Expand in place mode
+  if (expandInPlace) {
+    return (
+      <div className={cn("space-y-2", className)}>
+        {visiblePhotos.map((photo, index) => (
+          <div
+            key={index}
+            className={cn(
+              "relative w-full rounded-lg overflow-hidden bg-gray-100 cursor-pointer transition-all duration-300 ease-in-out",
+              expandedIndex === index ? "h-64" : "h-32"
+            )}
+            onClick={() => handleClick(index)}
+          >
+            <Image
+              src={photo}
+              alt={`Photo ${index + 1}`}
+              fill
+              className={cn(
+                "transition-all duration-300",
+                expandedIndex === index ? "object-contain" : "object-cover"
+              )}
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+              {expandedIndex === index ? "Klik untuk kecilkan" : "Klik untuk perbesar"}
+            </div>
+          </div>
+        ))}
+        {remainingCount > 0 && (
+          <p className="text-xs text-gray-500">+{remainingCount} foto lainnya</p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       {/* Thumbnail Grid */}
@@ -42,7 +87,7 @@ export function PhotoGallery({ photos, className, maxVisible = 3 }: PhotoGallery
         {visiblePhotos.map((photo, index) => (
           <button
             key={index}
-            onClick={() => openLightbox(index)}
+            onClick={() => handleClick(index)}
             className="relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden bg-gray-100 hover:opacity-90 transition-opacity flex-shrink-0"
           >
             <Image

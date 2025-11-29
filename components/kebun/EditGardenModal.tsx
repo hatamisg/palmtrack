@@ -98,68 +98,70 @@ export default function EditGardenModal({ open, onClose, onSubmit, garden }: Edi
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Kebun</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto rounded-2xl">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-base sm:text-lg">Edit Kebun</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Perbarui informasi kebun {garden?.nama}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           {/* Garden Image */}
-          <div>
-            <Label>Foto Kebun</Label>
+          <div className="space-y-1.5">
+            <Label className="text-xs sm:text-sm font-medium">Foto Kebun</Label>
             <ImageUpload
               value={imageUrl}
               onChange={setImageUrl}
               folder={`gardens/${garden?.id || 'new'}`}
               aspectRatio="video"
               placeholder="Upload foto kebun"
-              className="mt-2"
+              className="mt-1"
             />
           </div>
 
           {/* Nama Kebun */}
-          <div>
-            <Label htmlFor="nama">
+          <div className="space-y-1.5">
+            <Label htmlFor="nama" className="text-xs sm:text-sm font-medium">
               Nama Kebun <span className="text-red-500">*</span>
             </Label>
             <Input
               id="nama"
               placeholder="Contoh: Kebun Sawit Makmur"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("nama")}
             />
             {errors.nama && (
-              <p className="text-sm text-red-500 mt-1">{errors.nama.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.nama.message}</p>
             )}
           </div>
 
           {/* Lokasi Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="lokasi">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="lokasi" className="text-xs sm:text-sm font-medium">
                 Provinsi/Kota <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="lokasi"
                 placeholder="Contoh: Riau"
+                className="h-11 text-base sm:text-sm rounded-xl"
                 {...register("lokasi")}
               />
               {errors.lokasi && (
-                <p className="text-sm text-red-500 mt-1">{errors.lokasi.message}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.lokasi.message}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="varietas">
+            <div className="space-y-1.5">
+              <Label htmlFor="varietas" className="text-xs sm:text-sm font-medium">
                 Varietas <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={varietas}
                 onValueChange={(value) => setValue("varietas", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger id="varietas" className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -169,30 +171,31 @@ export default function EditGardenModal({ open, onClose, onSubmit, garden }: Edi
                 </SelectContent>
               </Select>
               {errors.varietas && (
-                <p className="text-sm text-red-500 mt-1">{errors.varietas.message}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.varietas.message}</p>
               )}
             </div>
           </div>
 
           {/* Lokasi Lengkap */}
-          <div>
-            <Label htmlFor="lokasiLengkap">
+          <div className="space-y-1.5">
+            <Label htmlFor="lokasiLengkap" className="text-xs sm:text-sm font-medium">
               Lokasi Lengkap <span className="text-red-500">*</span>
             </Label>
             <Input
               id="lokasiLengkap"
-              placeholder="Contoh: Desa Suka Makmur, Kec. Tapung, Kab. Kampar, Riau"
+              placeholder="Desa, Kecamatan, Kabupaten"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("lokasiLengkap")}
             />
             {errors.lokasiLengkap && (
-              <p className="text-sm text-red-500 mt-1">{errors.lokasiLengkap.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.lokasiLengkap.message}</p>
             )}
           </div>
 
-          {/* Numbers Row */}
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="luas">
+          {/* Luas & Jumlah Pohon Row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="luas" className="text-xs sm:text-sm font-medium">
                 Luas (Ha) <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -200,72 +203,87 @@ export default function EditGardenModal({ open, onClose, onSubmit, garden }: Edi
                 type="number"
                 step="0.1"
                 placeholder="25.5"
+                className="h-11 text-base sm:text-sm rounded-xl"
                 {...register("luas", { valueAsNumber: true })}
               />
               {errors.luas && (
-                <p className="text-sm text-red-500 mt-1">{errors.luas.message}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.luas.message}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="jumlahPohon">
+            <div className="space-y-1.5">
+              <Label htmlFor="jumlahPohon" className="text-xs sm:text-sm font-medium">
                 Jumlah Pohon <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="jumlahPohon"
                 type="number"
                 placeholder="3500"
+                className="h-11 text-base sm:text-sm rounded-xl"
                 {...register("jumlahPohon", { valueAsNumber: true })}
               />
               {errors.jumlahPohon && (
-                <p className="text-sm text-red-500 mt-1">{errors.jumlahPohon.message}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.jumlahPohon.message}</p>
               )}
             </div>
+          </div>
 
-            <div>
-              <Label htmlFor="tahunTanam">
+          {/* Tahun Tanam & Status Row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="tahunTanam" className="text-xs sm:text-sm font-medium">
                 Tahun Tanam <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="tahunTanam"
                 type="number"
                 placeholder="2020"
+                className="h-11 text-base sm:text-sm rounded-xl"
                 {...register("tahunTanam", { valueAsNumber: true })}
               />
               {errors.tahunTanam && (
-                <p className="text-sm text-red-500 mt-1">{errors.tahunTanam.message}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.tahunTanam.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="status" className="text-xs sm:text-sm font-medium">
+                Status <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={status}
+                onValueChange={(value: any) => setValue("status", value)}
+              >
+                <SelectTrigger id="status" className="h-11 text-base sm:text-sm rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Baik">Baik</SelectItem>
+                  <SelectItem value="Perlu Perhatian">Perlu Perhatian</SelectItem>
+                  <SelectItem value="Bermasalah">Bermasalah</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.status && (
+                <p className="text-xs text-red-500 mt-1">{errors.status.message}</p>
               )}
             </div>
           </div>
 
-          {/* Status */}
-          <div>
-            <Label htmlFor="status">
-              Status <span className="text-red-500">*</span>
-            </Label>
-            <Select
-              value={status}
-              onValueChange={(value: any) => setValue("status", value)}
+          <DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleClose}
+              className="h-11 rounded-xl w-full sm:w-auto"
             >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Baik">Baik</SelectItem>
-                <SelectItem value="Perlu Perhatian">Perlu Perhatian</SelectItem>
-                <SelectItem value="Bermasalah">Bermasalah</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.status && (
-              <p className="text-sm text-red-500 mt-1">{errors.status.message}</p>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
               Batal
             </Button>
-            <Button type="submit">Simpan Perubahan</Button>
+            <Button 
+              type="submit"
+              className="h-11 rounded-xl w-full sm:w-auto bg-green-600 hover:bg-green-700"
+            >
+              Simpan Perubahan
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

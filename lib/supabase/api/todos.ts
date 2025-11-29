@@ -1,8 +1,9 @@
-// API functions for centralized todos (combining maintenances and issues)
-import { TodoItem, Maintenance, Issue } from '@/types';
+// API functions for centralized todos (combining maintenances, issues, and tasks)
+import { TodoItem, Maintenance, Issue, Task } from '@/types';
 import { getAllGardens } from './gardens';
 import { getMaintenancesByGarden } from './maintenances';
 import { getIssuesByGarden } from './issues';
+import { getTasksByGarden } from './tasks';
 
 /**
  * Get all todos (maintenances + issues) from all gardens
@@ -67,6 +68,33 @@ export async function getAllTodos(): Promise<TodoItem[]> {
             status: issue.status,
             areaTerdampak: issue.areaTerdampak,
             deskripsi: issue.deskripsi,
+          });
+        }
+      }
+
+      // Get tasks (only To Do and In Progress)
+      const { data: tasks } = await getTasksByGarden(garden.id);
+
+      if (tasks) {
+        const pendingTasks = tasks.filter(
+          (t: Task) => t.status === 'To Do' || t.status === 'In Progress'
+        );
+
+        // Convert tasks to TodoItems
+        for (const task of pendingTasks) {
+          todos.push({
+            id: task.id,
+            gardenId: garden.id,
+            gardenName: garden.nama,
+            gardenSlug: garden.slug,
+            type: 'task',
+            judul: task.judul,
+            tanggal: task.tanggalTarget,
+            kategori: task.kategori,
+            status: task.status,
+            prioritas: task.prioritas,
+            assignedTo: task.assignedTo,
+            deskripsi: task.deskripsi,
           });
         }
       }

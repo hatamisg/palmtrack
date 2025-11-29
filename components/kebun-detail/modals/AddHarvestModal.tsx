@@ -6,8 +6,6 @@ import * as z from "zod";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -17,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Harvest } from "@/types";
-import { useEffect } from "react";
+import { X } from "lucide-react";
 
 const harvestSchema = z.object({
   tanggal: z.string().min(1, "Tanggal wajib diisi"),
@@ -57,8 +55,6 @@ export default function AddHarvestModal({ open, onClose, onSubmit }: AddHarvestM
   const kualitas = watch("kualitas");
   const jumlahKg = watch("jumlahKg");
   const hargaPerKg = watch("hargaPerKg");
-
-  // Calculate total nilai
   const totalNilai = jumlahKg * hargaPerKg;
 
   const onFormSubmit = (data: HarvestFormData) => {
@@ -77,35 +73,38 @@ export default function AddHarvestModal({ open, onClose, onSubmit }: AddHarvestM
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Tambah Data Panen</DialogTitle>
-          <DialogDescription>
-            Isi form di bawah untuk menambahkan data panen baru
-          </DialogDescription>
+      <DialogContent className="max-w-lg w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto p-0">
+        {/* Header */}
+        <DialogHeader className="sticky top-0 z-10 bg-white border-b px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-base sm:text-lg">Tambah Data Panen</DialogTitle>
+            <Button variant="ghost" size="sm" onClick={handleClose} className="h-8 w-8 p-0 -mr-2">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onFormSubmit)} className="px-4 py-4 sm:px-6 space-y-4">
           {/* Tanggal */}
           <div>
-            <Label htmlFor="tanggal">
+            <Label htmlFor="tanggal" className="text-sm">
               Tanggal Panen <span className="text-red-500">*</span>
             </Label>
             <Input
               id="tanggal"
               type="date"
-              className="h-11 md:h-10 text-base md:text-sm"
+              className="mt-1.5 h-11"
               {...register("tanggal")}
             />
             {errors.tanggal && (
-              <p className="text-sm text-red-500 mt-1">{errors.tanggal.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.tanggal.message}</p>
             )}
           </div>
 
-          {/* Jumlah & Harga Row */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Jumlah & Harga */}
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="jumlahKg">
+              <Label htmlFor="jumlahKg" className="text-sm">
                 Jumlah (Kg) <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -113,49 +112,46 @@ export default function AddHarvestModal({ open, onClose, onSubmit }: AddHarvestM
                 type="number"
                 step="0.1"
                 placeholder="1500"
+                className="mt-1.5 h-11"
                 {...register("jumlahKg", { valueAsNumber: true })}
               />
               {errors.jumlahKg && (
-                <p className="text-sm text-red-500 mt-1">{errors.jumlahKg.message}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.jumlahKg.message}</p>
               )}
             </div>
 
             <div>
-              <Label htmlFor="hargaPerKg">
-                Harga per Kg (Rp) <span className="text-red-500">*</span>
+              <Label htmlFor="hargaPerKg" className="text-sm">
+                Harga/Kg (Rp) <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="hargaPerKg"
                 type="number"
                 placeholder="2500"
+                className="mt-1.5 h-11"
                 {...register("hargaPerKg", { valueAsNumber: true })}
               />
               {errors.hargaPerKg && (
-                <p className="text-sm text-red-500 mt-1">{errors.hargaPerKg.message}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.hargaPerKg.message}</p>
               )}
             </div>
           </div>
 
-          {/* Total Nilai (Read-only, calculated) */}
-          <div>
-            <Label>Total Nilai</Label>
-            <div className="p-3 bg-gray-100 rounded-md border border-gray-200">
-              <p className="text-xl font-bold text-green-600">
-                Rp {totalNilai.toLocaleString('id-ID')}
-              </p>
-            </div>
+          {/* Total Nilai */}
+          <div className="bg-green-50 rounded-xl p-3 sm:p-4">
+            <p className="text-xs text-gray-600 mb-1">Total Nilai</p>
+            <p className="text-xl sm:text-2xl font-bold text-green-600">
+              Rp {totalNilai.toLocaleString("id-ID")}
+            </p>
           </div>
 
           {/* Kualitas */}
           <div>
-            <Label htmlFor="kualitas">
+            <Label htmlFor="kualitas" className="text-sm">
               Kualitas <span className="text-red-500">*</span>
             </Label>
-            <Select
-              value={kualitas}
-              onValueChange={(value: any) => setValue("kualitas", value)}
-            >
-              <SelectTrigger>
+            <Select value={kualitas} onValueChange={(value: any) => setValue("kualitas", value)}>
+              <SelectTrigger id="kualitas" className="mt-1.5 h-11">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -165,31 +161,29 @@ export default function AddHarvestModal({ open, onClose, onSubmit }: AddHarvestM
                 <SelectItem value="Kurang">Kurang</SelectItem>
               </SelectContent>
             </Select>
-            {errors.kualitas && (
-              <p className="text-sm text-red-500 mt-1">{errors.kualitas.message}</p>
-            )}
           </div>
 
           {/* Catatan */}
           <div>
-            <Label htmlFor="catatan">Catatan</Label>
+            <Label htmlFor="catatan" className="text-sm">Catatan</Label>
             <Textarea
               id="catatan"
-              placeholder="Catatan tambahan tentang panen..."
+              placeholder="Catatan tambahan..."
               rows={3}
+              className="mt-1.5"
               {...register("catatan")}
             />
-            {errors.catatan && (
-              <p className="text-sm text-red-500 mt-1">{errors.catatan.message}</p>
-            )}
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          {/* Footer Buttons */}
+          <div className="flex gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={handleClose} className="flex-1 h-11">
               Batal
             </Button>
-            <Button type="submit">Simpan</Button>
-          </DialogFooter>
+            <Button type="submit" className="flex-1 h-11">
+              Simpan
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

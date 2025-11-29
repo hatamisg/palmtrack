@@ -86,106 +86,115 @@ export default function EditExpenseModal({ open, onClose, onSubmit, expense }: E
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Pengeluaran</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto rounded-2xl">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-base sm:text-lg">Edit Pengeluaran</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Perbarui informasi data pengeluaran
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-          {/* Tanggal */}
-          <div>
-            <Label htmlFor="tanggal">
-              Tanggal <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="tanggal"
-              type="date"
-              {...register("tanggal")}
-            />
-            {errors.tanggal && (
-              <p className="text-sm text-red-500 mt-1">{errors.tanggal.message}</p>
-            )}
-          </div>
+          {/* Tanggal & Kategori Row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="tanggal" className="text-xs sm:text-sm font-medium">
+                Tanggal <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="tanggal"
+                type="date"
+                className="h-11 text-base sm:text-sm rounded-xl"
+                {...register("tanggal")}
+              />
+              {errors.tanggal && (
+                <p className="text-xs text-red-500 mt-1">{errors.tanggal.message}</p>
+              )}
+            </div>
 
-          {/* Kategori */}
-          <div>
-            <Label htmlFor="kategori">
-              Kategori <span className="text-red-500">*</span>
-            </Label>
-            <Select
-              value={kategori}
-              onValueChange={(value: any) => setValue("kategori", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Pupuk">Pupuk</SelectItem>
-                <SelectItem value="Pestisida">Pestisida</SelectItem>
-                <SelectItem value="Peralatan">Peralatan</SelectItem>
-                <SelectItem value="Tenaga Kerja">Tenaga Kerja</SelectItem>
-                <SelectItem value="Transportasi">Transportasi</SelectItem>
-                <SelectItem value="Lainnya">Lainnya</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.kategori && (
-              <p className="text-sm text-red-500 mt-1">{errors.kategori.message}</p>
-            )}
+            <div className="space-y-1.5">
+              <Label htmlFor="kategori" className="text-xs sm:text-sm font-medium">
+                Kategori <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={kategori}
+                onValueChange={(value: any) => setValue("kategori", value)}
+              >
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Pupuk">Pupuk</SelectItem>
+                  <SelectItem value="Pestisida">Pestisida</SelectItem>
+                  <SelectItem value="Peralatan">Peralatan</SelectItem>
+                  <SelectItem value="Tenaga Kerja">Tenaga Kerja</SelectItem>
+                  <SelectItem value="Transportasi">Transportasi</SelectItem>
+                  <SelectItem value="Lainnya">Lainnya</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Deskripsi */}
-          <div>
-            <Label htmlFor="deskripsi">
+          <div className="space-y-1.5">
+            <Label htmlFor="deskripsi" className="text-xs sm:text-sm font-medium">
               Deskripsi <span className="text-red-500">*</span>
             </Label>
             <Input
               id="deskripsi"
-              placeholder="Misal: Pembelian pupuk NPK 500kg"
+              placeholder="Pembelian pupuk NPK 500kg"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("deskripsi")}
             />
             {errors.deskripsi && (
-              <p className="text-sm text-red-500 mt-1">{errors.deskripsi.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.deskripsi.message}</p>
             )}
           </div>
 
           {/* Jumlah */}
-          <div>
-            <Label htmlFor="jumlah">
+          <div className="space-y-1.5">
+            <Label htmlFor="jumlah" className="text-xs sm:text-sm font-medium">
               Jumlah (Rp) <span className="text-red-500">*</span>
             </Label>
             <Input
               id="jumlah"
               type="number"
               placeholder="1500000"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("jumlah", { valueAsNumber: true })}
             />
             {errors.jumlah && (
-              <p className="text-sm text-red-500 mt-1">{errors.jumlah.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.jumlah.message}</p>
             )}
           </div>
 
           {/* Catatan */}
-          <div>
-            <Label htmlFor="catatan">Catatan</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="catatan" className="text-xs sm:text-sm font-medium">Catatan</Label>
             <Textarea
               id="catatan"
-              placeholder="Catatan tambahan tentang pengeluaran..."
-              rows={3}
+              placeholder="Catatan tambahan..."
+              rows={2}
+              className="text-base sm:text-sm rounded-xl resize-none"
               {...register("catatan")}
             />
-            {errors.catatan && (
-              <p className="text-sm text-red-500 mt-1">{errors.catatan.message}</p>
-            )}
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleClose}
+              className="h-11 rounded-xl w-full sm:w-auto"
+            >
               Batal
             </Button>
-            <Button type="submit">Simpan Perubahan</Button>
+            <Button 
+              type="submit"
+              className="h-11 rounded-xl w-full sm:w-auto bg-green-600 hover:bg-green-700"
+            >
+              Simpan Perubahan
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Calendar, AlertCircle } from 'lucide-react';
+import { Calendar, AlertCircle, CheckCircle2, ListTodo } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getTodosGroupedByDate, TodosByDate } from '@/lib/supabase/api/todos';
@@ -9,7 +9,7 @@ import { TodoItem } from '@/types';
 import SwipeableTodoItem from './SwipeableTodoItem';
 
 interface TodoListNewProps {
-  limit?: number; // Limit total items to display
+  limit?: number;
 }
 
 export default function TodoListNew({ limit }: TodoListNewProps) {
@@ -39,9 +39,7 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
   };
 
   const handleCompleteTodo = async (id: string) => {
-    // TODO: Implement actual completion logic with API
     console.log('Completing todo:', id);
-    // For now, just reload todos
     await loadTodos();
   };
 
@@ -55,26 +53,25 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
     );
   };
 
-  const renderSection = (title: string, todos: TodoItem[], icon: React.ReactNode) => {
+  const renderSection = (title: string, todos: TodoItem[], icon: React.ReactNode, dotColor: string) => {
     if (todos.length === 0) return null;
 
     return (
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-          {icon}
-          <span>{title}</span>
-          <Badge variant="secondary" className="text-xs">
+      <div className="space-y-1.5 sm:space-y-2">
+        <div className="flex items-center gap-2 px-1">
+          <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${dotColor}`} />
+          <span className="text-xs sm:text-sm font-medium text-gray-600">{title}</span>
+          <Badge variant="secondary" className="text-[10px] sm:text-xs h-4 sm:h-5 px-1.5 sm:px-2 bg-gray-100 text-gray-600">
             {todos.length}
           </Badge>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-1.5 sm:space-y-2">
           {todos.map((todo) => renderTodoItem(todo))}
         </div>
       </div>
     );
   };
 
-  // Calculate total todos and apply limit if specified
   const allTodos = [
     ...todosGrouped.overdue,
     ...todosGrouped.today,
@@ -86,12 +83,10 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
   const hasMoreItems = limit && allTodos.length > limit;
   const displayCount = limit || allTodos.length;
 
-  // Apply limit to each section proportionally
   let remainingLimit = limit || Infinity;
   const limitedGrouped = { ...todosGrouped };
 
   if (limit) {
-    // Prioritize overdue and today first
     limitedGrouped.overdue = todosGrouped.overdue.slice(0, remainingLimit);
     remainingLimit -= limitedGrouped.overdue.length;
 
@@ -126,15 +121,20 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
   if (loading) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+        <CardHeader className="pb-2 sm:pb-3">
+          <CardTitle className="flex items-center gap-2 text-sm sm:text-base lg:text-lg">
+            <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
+              <ListTodo className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-blue-600" />
+            </div>
             Daftar Tugas
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <div className="text-sm text-muted-foreground">Memuat todo...</div>
+          <div className="flex items-center justify-center py-8 sm:py-12">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+              <span className="text-xs sm:text-sm text-gray-500">Memuat tugas...</span>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -144,20 +144,24 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
   if (allTodos.length === 0) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+        <CardHeader className="pb-2 sm:pb-3">
+          <CardTitle className="flex items-center gap-2 text-sm sm:text-base lg:text-lg">
+            <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
+              <ListTodo className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-blue-600" />
+            </div>
             Daftar Tugas
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Calendar className="h-12 w-12 text-muted-foreground mb-3" />
-            <p className="text-sm text-muted-foreground">
-              Tidak ada todo yang pending
+          <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center">
+            <div className="bg-green-100 p-3 sm:p-4 rounded-full mb-3">
+              <CheckCircle2 className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
+            </div>
+            <p className="text-sm sm:text-base font-medium text-gray-700">
+              Semua tugas selesai!
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Semua perawatan dan masalah sudah ditangani
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              Tidak ada tugas yang pending
             </p>
           </div>
         </CardContent>
@@ -167,47 +171,56 @@ export default function TodoListNew({ limit }: TodoListNewProps) {
 
   return (
     <Card>
-      <CardHeader className="pb-3 md:pb-6">
-        <CardTitle className="flex items-center justify-between text-base md:text-lg">
+      <CardHeader className="pb-2 sm:pb-3">
+        <CardTitle className="flex items-center justify-between text-sm sm:text-base lg:text-lg">
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 md:h-5 md:w-5" />
+            <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg">
+              <ListTodo className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-blue-600" />
+            </div>
             Daftar Tugas
           </div>
-          <Badge variant="secondary" className="text-xs">{allTodos.length} item</Badge>
+          <Badge variant="secondary" className="text-[10px] sm:text-xs bg-blue-50 text-blue-700 border-blue-200">
+            {allTodos.length} tugas
+          </Badge>
         </CardTitle>
       </CardHeader>
-      <CardContent className="px-3 md:px-6">
-        <div className="space-y-3 md:space-y-4 max-h-[500px] md:max-h-[600px] overflow-y-auto pr-1 md:pr-2 smooth-scroll">
+      <CardContent>
+        <div className="space-y-3 sm:space-y-4 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
           {renderSection(
             'Terlambat',
             limitedGrouped.overdue,
-            <AlertCircle className="h-4 w-4 text-red-500" />
+            <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-500" />,
+            'bg-red-500'
           )}
           {renderSection(
             'Hari Ini',
             limitedGrouped.today,
-            <Calendar className="h-4 w-4 text-blue-500" />
+            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500" />,
+            'bg-blue-500'
           )}
           {renderSection(
             'Besok',
             limitedGrouped.tomorrow,
-            <Calendar className="h-4 w-4 text-green-500" />
+            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500" />,
+            'bg-green-500'
           )}
           {renderSection(
             'Minggu Ini',
             limitedGrouped.thisWeek,
-            <Calendar className="h-4 w-4 text-orange-500" />
+            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-500" />,
+            'bg-orange-500'
           )}
           {renderSection(
             'Nanti',
             limitedGrouped.later,
-            <Calendar className="h-4 w-4 text-gray-500" />
+            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400" />,
+            'bg-gray-400'
           )}
 
           {hasMoreItems && (
-            <div className="text-center pt-2">
-              <p className="text-xs text-muted-foreground">
-                Menampilkan {displayCount} dari {allTodos.length} todo
+            <div className="text-center pt-2 pb-1">
+              <p className="text-[10px] sm:text-xs text-gray-400">
+                Menampilkan {displayCount} dari {allTodos.length} tugas
               </p>
             </div>
           )}

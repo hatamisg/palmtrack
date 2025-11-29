@@ -129,12 +129,14 @@ export function GardensProvider({ children, useSupabase = false }: GardensProvid
     };
 
     try {
-      // First, resolve the ID if it's a slug
+      // Try to find garden in local state first
+      let actualId = idOrSlug;
       const garden = gardens.find(g => g.id === idOrSlug || g.slug === idOrSlug);
-      if (!garden) {
-        throw new Error('Garden not found');
+      if (garden) {
+        actualId = garden.id;
       }
-      const actualId = garden.id;
+      // If not found in state, assume idOrSlug is already a valid UUID
+      // This handles cases where the garden data was fetched separately
 
       if (shouldUseSupabase) {
         // Update in Supabase
@@ -146,7 +148,15 @@ export function GardensProvider({ children, useSupabase = false }: GardensProvid
         }
 
         if (data) {
-          setGardens(prev => prev.map(g => g.id === actualId ? data : g));
+          setGardens(prev => {
+            // Check if garden exists in state
+            const exists = prev.some(g => g.id === actualId);
+            if (exists) {
+              return prev.map(g => g.id === actualId ? data : g);
+            }
+            // If not in state, add it
+            return [data, ...prev];
+          });
           toast.success('Kebun berhasil diperbarui di database!');
           console.log('✅ Garden updated in Supabase');
           return true;

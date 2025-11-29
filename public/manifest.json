@@ -1,6 +1,6 @@
 {
-  "name": "PalmTrack - Garden Management",
-  "short_name": "PalmTrack",
+  "name": "Sawit Saku - Manajemen Kebun",
+  "short_name": "Sawit Saku",
   "description": "Aplikasi manajemen kebun kelapa sawit dengan fitur task management, harvest recording, dan monitoring",
   "start_url": "/",
   "scope": "/",

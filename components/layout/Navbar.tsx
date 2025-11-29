@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Palmtree, LayoutDashboard, MapPin, User } from "lucide-react";
+import { LayoutDashboard, MapPin, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Navbar() {
@@ -28,9 +28,9 @@ export default function Navbar() {
           <div className="flex">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <Palmtree className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+              <img src="/icon.svg" alt="Sawit Saku" className="h-8 w-8 md:h-10 md:w-10" />
               <span className="ml-2 text-lg md:text-xl font-bold text-gray-900">
-                PalmTrack
+                Sawit Saku
               </span>
             </Link>
 

@@ -27,7 +27,7 @@ function convertFromDb(garden: Garden) {
 
 // Convert app format to database format
 function convertToDb(garden: any): GardenInsert | GardenUpdate {
-  return {
+  const dbData: any = {
     nama: garden.nama,
     slug: garden.slug,
     lokasi: garden.lokasi,
@@ -37,8 +37,14 @@ function convertToDb(garden: any): GardenInsert | GardenUpdate {
     tahun_tanam: garden.tahunTanam,
     varietas: garden.varietas,
     status: garden.status,
-    image_url: garden.imageUrl || null,
   };
+  
+  // Add image_url if it exists (column may not exist in all database schemas)
+  if (garden.imageUrl !== undefined) {
+    dbData.image_url = garden.imageUrl || null;
+  }
+  
+  return dbData;
 }
 
 /**

@@ -67,7 +67,7 @@ export default function MobileNav() {
           <Drawer.Content className="bg-white flex flex-col rounded-t-[10px] h-[50vh] mt-24 fixed bottom-0 left-0 right-0 z-50" aria-describedby="drawer-description">
             <Drawer.Title className="sr-only">Menu Navigasi</Drawer.Title>
             <Drawer.Description id="drawer-description" className="sr-only">
-              Menu navigasi utama aplikasi PalmTrack
+              Menu navigasi utama aplikasi Sawit Saku
             </Drawer.Description>
             <div className="p-4 bg-white rounded-t-[10px] flex-1">
               <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
@@ -109,7 +109,7 @@ export default function MobileNav() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">Admin</p>
-                      <p className="text-sm text-gray-500">admin@palmtrack.com</p>
+                      <p className="text-sm text-gray-500">admin@sawitsaku.com</p>
                     </div>
                   </div>
                 </div>

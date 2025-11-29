@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, Trees, Wrench, AlertTriangle } from "lucide-react";
 
 interface QuickStatsProps {
@@ -16,55 +15,67 @@ export default function QuickStats({
 }: QuickStatsProps) {
   const stats = [
     {
-      label: "Luas Kebun",
-      value: `${luas} Ha`,
+      label: "Luas",
+      value: `${luas}`,
+      unit: "Ha",
       icon: TrendingUp,
       color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      bgColor: "bg-blue-500",
+      lightBg: "bg-blue-50",
     },
     {
-      label: "Jumlah Pohon",
+      label: "Pohon",
       value: jumlahPohon.toLocaleString("id-ID"),
+      unit: "",
       icon: Trees,
       color: "text-green-600",
-      bgColor: "bg-green-50",
+      bgColor: "bg-green-500",
+      lightBg: "bg-green-50",
     },
     {
-      label: "Perawatan Terjadwal",
+      label: "Perawatan",
       value: upcomingMaintenances,
+      unit: "jadwal",
       icon: Wrench,
       color: "text-orange-600",
-      bgColor: "bg-orange-50",
+      bgColor: "bg-orange-500",
+      lightBg: "bg-orange-50",
     },
     {
-      label: "Masalah Terbuka",
+      label: "Masalah",
       value: openIssues,
+      unit: "aktif",
       icon: AlertTriangle,
       color: "text-red-600",
-      bgColor: "bg-red-50",
+      bgColor: "bg-red-500",
+      lightBg: "bg-red-50",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+    <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 md:mb-6">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
-          <Card key={index} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-3 md:p-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs md:text-sm font-medium text-gray-600 truncate">{stat.label}</p>
-                  <p className="text-lg md:text-2xl font-bold text-gray-900 mt-1 md:mt-2 truncate">
-                    {stat.value}
-                  </p>
-                </div>
-                <div className={`${stat.bgColor} p-2 md:p-3 rounded-lg self-end md:self-auto flex-shrink-0`}>
-                  <Icon className={`h-4 w-4 md:h-6 md:w-6 ${stat.color}`} />
-                </div>
+          <div
+            key={index}
+            className={`${stat.lightBg} rounded-xl p-2.5 sm:p-3 md:p-4 transition-all hover:shadow-md`}
+          >
+            <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-2 sm:gap-3">
+              <div className={`${stat.bgColor} p-1.5 sm:p-2 rounded-lg flex-shrink-0`}>
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-white" />
               </div>
-            </CardContent>
-          </Card>
+              <div className="min-w-0">
+                <p className="text-[10px] sm:text-xs text-gray-600 truncate">{stat.label}</p>
+                <p className="text-sm sm:text-lg md:text-xl font-bold text-gray-900">
+                  {stat.value}
+                </p>
+                {stat.unit && (
+                  <p className="text-[9px] sm:text-xs text-gray-500 hidden sm:block">{stat.unit}</p>
+                )}
+              </div>
+            </div>
+          </div>
         );
       })}
     </div>

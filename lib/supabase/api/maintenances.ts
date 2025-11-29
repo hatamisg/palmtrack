@@ -29,7 +29,7 @@ function convertFromDb(maintenance: Maintenance) {
 
 // Convert app format to database format
 function convertToDb(maintenance: any): MaintenanceInsert | MaintenanceUpdate {
-  return {
+  const dbData: any = {
     garden_id: maintenance.gardenId,
     jenis_perawatan: maintenance.jenisPerawatan,
     judul: maintenance.judul,
@@ -46,8 +46,14 @@ function convertToDb(maintenance: any): MaintenanceInsert | MaintenanceUpdate {
           ? maintenance.tanggalSelesai.toISOString().split('T')[0]
           : maintenance.tanggalSelesai)
       : null,
-    images: maintenance.images || null,
   };
+  
+  // Add images if it exists (column may not exist in all database schemas)
+  if (maintenance.images !== undefined) {
+    dbData.images = maintenance.images || null;
+  }
+  
+  return dbData;
 }
 
 /**

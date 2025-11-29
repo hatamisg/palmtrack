@@ -6,13 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PhotoGallery } from "@/components/ui/photo-gallery";
-import { Plus, Calendar, CheckCircle2, Edit, Trash2 } from "lucide-react";
-import { format, isPast, isFuture } from "date-fns";
+import { Plus, Calendar, CheckCircle2, Edit, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { toast } from "sonner";
 import AddMaintenanceModal from "../modals/AddMaintenanceModal";
 import EditMaintenanceModal from "../modals/EditMaintenanceModal";
 import { createMaintenance, updateMaintenance, updateMaintenanceStatus, deleteMaintenance, getMaintenancesByGarden } from "@/lib/supabase/api/maintenances";
+import { createExpense } from "@/lib/supabase/api/expenses";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,9 +56,15 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
     setIsLoading(false);
   };
 
+  const [showAll, setShowAll] = useState(false);
+
+  // Sort by newest first
   const sortedMaintenances = [...maintenances].sort(
-    (a, b) => new Date(a.tanggalDijadwalkan).getTime() - new Date(b.tanggalDijadwalkan).getTime()
+    (a, b) => new Date(b.tanggalDijadwalkan).getTime() - new Date(a.tanggalDijadwalkan).getTime()
   );
+
+  // Show only 5 items unless showAll is true
+  const displayedMaintenances = showAll ? sortedMaintenances : sortedMaintenances.slice(0, 5);
 
   const dijadwalkan = maintenances.filter((m) => m.status === "Dijadwalkan").length;
   const selesai = maintenances.filter((m) => m.status === "Selesai").length;
@@ -76,7 +83,7 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
     }
   };
 
-  const handleAddMaintenance = async (maintenanceData: any) => {
+  const handleAddMaintenance = async (maintenanceData: any, expenseData?: any) => {
     const { data, error } = await createMaintenance({
       ...maintenanceData,
       gardenId,
@@ -86,6 +93,20 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
       setMaintenances((prev) => [...prev, data]);
       setIsAddModalOpen(false);
       toast.success("Jadwal perawatan berhasil ditambahkan!");
+
+      // Create expense if included
+      if (expenseData) {
+        const { data: expenseResult, error: expenseError } = await createExpense({
+          ...expenseData,
+          gardenId,
+        });
+
+        if (expenseResult) {
+          toast.success("Pengeluaran berhasil dicatat!");
+        } else if (expenseError) {
+          toast.error("Perawatan tersimpan, tapi gagal mencatat pengeluaran: " + expenseError);
+        }
+      }
     } else if (error) {
       toast.error("Gagal menambahkan perawatan: " + error);
     }
@@ -110,11 +131,54 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
   };
 
   const handleMarkDone = async (maintenanceId: string) => {
+    // Find the maintenance to check if it's recurring
+    const maintenance = maintenances.find((m) => m.id === maintenanceId);
+    
     const { data, error } = await updateMaintenanceStatus(maintenanceId, "Selesai");
 
     if (data) {
       setMaintenances((prev) => prev.map((m) => (m.id === maintenanceId ? data : m)));
       toast.success("Perawatan ditandai selesai!");
+
+      // If recurring, create next schedule automatically
+      if (maintenance?.isRecurring && maintenance?.recurringInterval) {
+        const nextDate = new Date(data.tanggalSelesai || new Date());
+        nextDate.setDate(nextDate.getDate() + maintenance.recurringInterval);
+
+        // Check if there's already a scheduled maintenance with same title on or after nextDate
+        const existingNext = maintenances.find(
+          (m) =>
+            m.judul === maintenance.judul &&
+            m.status === "Dijadwalkan" &&
+            m.id !== maintenanceId
+        );
+
+        if (existingNext) {
+          // Already has a scheduled next, don't create duplicate
+          toast.info("Jadwal berikutnya sudah ada");
+        } else {
+          const nextMaintenanceData = {
+            jenisPerawatan: maintenance.jenisPerawatan,
+            judul: maintenance.judul,
+            tanggalDijadwalkan: nextDate,
+            status: "Dijadwalkan" as const,
+            detail: maintenance.detail,
+            penanggungJawab: maintenance.penanggungJawab,
+            isRecurring: true,
+            recurringInterval: maintenance.recurringInterval,
+            gardenId,
+          };
+
+          const { data: nextData, error: nextError } = await createMaintenance(nextMaintenanceData);
+
+          if (nextData) {
+            setMaintenances((prev) => [...prev, nextData]);
+            toast.success(`Jadwal berikutnya: ${format(nextDate, "d MMM yyyy", { locale: id })}`);
+          } else if (nextError) {
+            toast.error("Gagal membuat jadwal berikutnya: " + nextError);
+          }
+        }
+      }
     } else if (error) {
       toast.error("Gagal mengubah status: " + error);
     }
@@ -175,18 +239,32 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
 
       {/* Timeline */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base md:text-lg">Timeline Perawatan</CardTitle>
+        <CardHeader className="pb-2 sm:pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base md:text-lg">Timeline Perawatan</CardTitle>
+            {sortedMaintenances.length > 0 && (
+              <span className="text-xs text-gray-500">{sortedMaintenances.length} total</span>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="px-3 md:px-6">
-          <div className="space-y-3 md:space-y-4">
-            {sortedMaintenances.map((maintenance, index) => (
-              <div
-                key={maintenance.id}
-                className={`flex gap-2 md:gap-4 pb-3 md:pb-4 ${
-                  index < sortedMaintenances.length - 1 ? "border-b" : ""
-                }`}
-              >
+          {sortedMaintenances.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Calendar className="h-6 w-6 text-gray-400" />
+              </div>
+              <p className="text-sm text-gray-500">Belum ada jadwal perawatan</p>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-3 md:space-y-4">
+                {displayedMaintenances.map((maintenance, index) => (
+                  <div
+                    key={maintenance.id}
+                    className={`flex gap-2 md:gap-4 pb-3 md:pb-4 ${
+                      index < displayedMaintenances.length - 1 ? "border-b" : ""
+                    }`}
+                  >
                 {/* Date */}
                 <div className="flex-shrink-0 w-16 md:w-24 text-right">
                   <div className="text-xs md:text-sm font-medium text-gray-900">
@@ -272,7 +350,7 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
                   {/* Photo Gallery */}
                   {maintenance.images && maintenance.images.length > 0 && (
                     <div className="mb-2">
-                      <PhotoGallery photos={maintenance.images} maxVisible={3} />
+                      <PhotoGallery photos={maintenance.images} maxVisible={3} expandInPlace />
                     </div>
                   )}
 
@@ -297,6 +375,32 @@ export default function TabPerawatan({ gardenId, maintenances: initialMaintenanc
               </div>
             ))}
           </div>
+
+          {/* Show More/Less Button */}
+          {sortedMaintenances.length > 5 && (
+            <div className="mt-4 pt-3 border-t">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAll(!showAll)}
+                className="w-full h-9 text-sm text-gray-600 hover:text-gray-900"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="h-4 w-4 mr-1" />
+                    Tampilkan Lebih Sedikit
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 mr-1" />
+                    Lihat Semua ({sortedMaintenances.length - 5} lainnya)
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+            </>
+          )}
         </CardContent>
       </Card>
 

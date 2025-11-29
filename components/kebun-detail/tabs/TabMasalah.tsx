@@ -14,6 +14,7 @@ import Image from "next/image";
 import AddIssueModal from "../modals/AddIssueModal";
 import EditIssueModal from "../modals/EditIssueModal";
 import { createIssue, updateIssue, updateIssueStatus, deleteIssue, getIssuesByGarden } from "@/lib/supabase/api/issues";
+import { createExpense } from "@/lib/supabase/api/expenses";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,6 +39,7 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
   const [issueToDelete, setIssueToDelete] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [expandedImageId, setExpandedImageId] = useState<string | null>(null);
 
   // Fetch issues from Supabase on mount
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
     }
   };
 
-  const handleAddIssue = async (issueData: any) => {
+  const handleAddIssue = async (issueData: any, expenseData?: any) => {
     const { data, error } = await createIssue({
       ...issueData,
       gardenId,
@@ -87,6 +89,20 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
       setIssues((prev) => [...prev, data]);
       setIsAddModalOpen(false);
       toast.success("Masalah berhasil dilaporkan!");
+
+      // Create expense if included
+      if (expenseData) {
+        const { data: expenseResult, error: expenseError } = await createExpense({
+          ...expenseData,
+          gardenId,
+        });
+
+        if (expenseResult) {
+          toast.success("Pengeluaran berhasil dicatat!");
+        } else if (expenseError) {
+          toast.error("Masalah tersimpan, tapi gagal mencatat pengeluaran: " + expenseError);
+        }
+      }
     } else if (error) {
       toast.error("Gagal melaporkan masalah: " + error);
     }
@@ -238,13 +254,23 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
 
                 {issue.fotoUrls && issue.fotoUrls.length > 0 && (
                   <div className="mb-3">
-                    <div className="relative w-full h-40 rounded-lg overflow-hidden bg-gray-100">
+                    <div 
+                      className={`relative w-full rounded-lg overflow-hidden bg-gray-100 cursor-pointer transition-all duration-300 ease-in-out ${
+                        expandedImageId === issue.id ? "h-80" : "h-40"
+                      }`}
+                      onClick={() => setExpandedImageId(expandedImageId === issue.id ? null : issue.id)}
+                    >
                       <Image
                         src={issue.fotoUrls[0]}
                         alt={issue.judul}
                         fill
-                        className="object-cover"
+                        className={`transition-all duration-300 ${
+                          expandedImageId === issue.id ? "object-contain" : "object-cover"
+                        }`}
                       />
+                      <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                        {expandedImageId === issue.id ? "Klik untuk kecilkan" : "Klik untuk perbesar"}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -327,6 +353,7 @@ export default function TabMasalah({ gardenId, issues: initialIssues }: TabMasal
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
     </div>
   );
 }

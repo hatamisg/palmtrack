@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,8 +15,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Harvest } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TodoItem } from "@/types";
+import { createHarvest } from "@/lib/supabase/api/harvests";
+import { updateTaskStatus } from "@/lib/supabase/api/tasks";
+import { toast } from "sonner";
+import { format } from "date-fns";
 
 const harvestSchema = z.object({
   tanggal: z.string().min(1, "Tanggal wajib diisi"),
@@ -29,27 +38,32 @@ const harvestSchema = z.object({
 
 type HarvestFormData = z.infer<typeof harvestSchema>;
 
-interface EditHarvestModalProps {
+interface HarvestRecordModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Harvest, "id" | "gardenId" | "createdAt" | "totalNilai">) => void;
-  harvest: Harvest | null;
+  todo: TodoItem | null;
+  onSuccess?: () => void;
 }
 
-export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: EditHarvestModalProps) {
+export default function HarvestRecordModal({
+  open,
+  onClose,
+  todo,
+  onSuccess,
+}: HarvestRecordModalProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     setValue,
     watch,
   } = useForm<HarvestFormData>({
     resolver: zodResolver(harvestSchema),
     defaultValues: {
-      tanggal: "",
+      tanggal: format(new Date(), "yyyy-MM-dd"),
       jumlahKg: 0,
-      hargaPerKg: 0,
+      hargaPerKg: 2500,
       kualitas: "Baik",
       catatan: "",
     },
@@ -58,31 +72,44 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
   const kualitas = watch("kualitas");
   const jumlahKg = watch("jumlahKg");
   const hargaPerKg = watch("hargaPerKg");
-
-  // Calculate total nilai
   const totalNilai = jumlahKg * hargaPerKg;
 
-  // Update form values when harvest prop changes
-  useEffect(() => {
-    if (harvest) {
-      setValue("tanggal", harvest.tanggal instanceof Date
-        ? harvest.tanggal.toISOString().split('T')[0]
-        : harvest.tanggal as string
-      );
-      setValue("jumlahKg", harvest.jumlahKg);
-      setValue("hargaPerKg", harvest.hargaPerKg);
-      setValue("kualitas", harvest.kualitas);
-      setValue("catatan", harvest.catatan || "");
-    }
-  }, [harvest, setValue]);
+  const onFormSubmit = async (data: HarvestFormData) => {
+    if (!todo) return;
 
-  const onFormSubmit = (data: HarvestFormData) => {
-    onSubmit({
-      ...data,
-      tanggal: new Date(data.tanggal),
-      totalNilai,
-    } as any);
-    reset();
+    try {
+      // Create harvest record
+      const { data: harvestData, error: harvestError } = await createHarvest({
+        gardenId: todo.gardenId,
+        tanggal: new Date(data.tanggal),
+        jumlahKg: data.jumlahKg,
+        hargaPerKg: data.hargaPerKg,
+        totalNilai: data.jumlahKg * data.hargaPerKg,
+        kualitas: data.kualitas,
+        catatan: data.catatan || `Dari jadwal: ${todo.judul}`,
+      });
+
+      if (harvestError) {
+        toast.error("Gagal menyimpan data panen: " + harvestError);
+        return;
+      }
+
+      // Mark task as done
+      const { error: taskError } = await updateTaskStatus(todo.id, "Done");
+
+      if (taskError) {
+        toast.error("Gagal menyelesaikan tugas: " + taskError);
+        return;
+      }
+
+      toast.success("Data panen berhasil dicatat!");
+      reset();
+      onClose();
+      onSuccess?.();
+    } catch (error) {
+      console.error("Error recording harvest:", error);
+      toast.error("Terjadi kesalahan");
+    }
   };
 
   const handleClose = () => {
@@ -90,18 +117,19 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
     onClose();
   };
 
+  if (!todo) return null;
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto rounded-2xl">
         <DialogHeader className="pb-2">
-          <DialogTitle className="text-base sm:text-lg">Edit Data Panen</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">Catat Hasil Panen</DialogTitle>
           <DialogDescription className="text-xs sm:text-sm">
-            Perbarui informasi data panen
+            {todo.gardenName} • {todo.judul}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-          {/* Tanggal */}
           <div className="space-y-1.5">
             <Label htmlFor="tanggal" className="text-xs sm:text-sm font-medium">
               Tanggal Panen <span className="text-red-500">*</span>
@@ -113,11 +141,12 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
               {...register("tanggal")}
             />
             {errors.tanggal && (
-              <p className="text-xs text-red-500 mt-1">{errors.tanggal.message}</p>
+              <p className="text-xs text-red-500 mt-1">
+                {errors.tanggal.message}
+              </p>
             )}
           </div>
 
-          {/* Jumlah & Harga Row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="jumlahKg" className="text-xs sm:text-sm font-medium">
@@ -132,7 +161,9 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
                 {...register("jumlahKg", { valueAsNumber: true })}
               />
               {errors.jumlahKg && (
-                <p className="text-xs text-red-500 mt-1">{errors.jumlahKg.message}</p>
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.jumlahKg.message}
+                </p>
               )}
             </div>
 
@@ -148,22 +179,22 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
                 {...register("hargaPerKg", { valueAsNumber: true })}
               />
               {errors.hargaPerKg && (
-                <p className="text-xs text-red-500 mt-1">{errors.hargaPerKg.message}</p>
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.hargaPerKg.message}
+                </p>
               )}
             </div>
           </div>
 
-          {/* Total Nilai (Read-only, calculated) */}
           <div className="space-y-1.5">
             <Label className="text-xs sm:text-sm font-medium">Total Nilai</Label>
             <div className="p-3 sm:p-4 bg-green-50 rounded-xl border border-green-200">
               <p className="text-lg sm:text-xl font-bold text-green-600">
-                Rp {totalNilai.toLocaleString('id-ID')}
+                Rp {totalNilai.toLocaleString("id-ID")}
               </p>
             </div>
           </div>
 
-          {/* Kualitas */}
           <div className="space-y-1.5">
             <Label htmlFor="kualitas" className="text-xs sm:text-sm font-medium">
               Kualitas <span className="text-red-500">*</span>
@@ -172,7 +203,7 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
               value={kualitas}
               onValueChange={(value: any) => setValue("kualitas", value)}
             >
-              <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
+              <SelectTrigger id="kualitas" className="h-11 text-base sm:text-sm rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -184,7 +215,6 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
             </Select>
           </div>
 
-          {/* Catatan */}
           <div className="space-y-1.5">
             <Label htmlFor="catatan" className="text-xs sm:text-sm font-medium">Catatan</Label>
             <Textarea
@@ -206,10 +236,11 @@ export default function EditHarvestModal({ open, onClose, onSubmit, harvest }: E
               Batal
             </Button>
             <Button 
-              type="submit"
+              type="submit" 
+              disabled={isSubmitting}
               className="h-11 rounded-xl w-full sm:w-auto bg-green-600 hover:bg-green-700"
             >
-              Simpan Perubahan
+              {isSubmitting ? "Menyimpan..." : "Simpan Panen"}
             </Button>
           </DialogFooter>
         </form>

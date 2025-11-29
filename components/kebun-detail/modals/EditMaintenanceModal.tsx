@@ -141,20 +141,20 @@ export default function EditMaintenanceModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Jadwal Perawatan</DialogTitle>
-          <DialogDescription>
-            Perbarui informasi perawatan {maintenance?.judul}
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto rounded-2xl">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-base sm:text-lg">Edit Jadwal Perawatan</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
+            Perbarui informasi perawatan
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           {/* Jenis Perawatan & Status Row */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="jenisPerawatan">
-                Jenis Perawatan <span className="text-red-500">*</span>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="jenisPerawatan" className="text-xs sm:text-sm font-medium">
+                Jenis <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={jenisPerawatan}
@@ -162,7 +162,7 @@ export default function EditMaintenanceModal({
                   setValue("jenisPerawatan", value)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -173,22 +173,17 @@ export default function EditMaintenanceModal({
                   <SelectItem value="Lainnya">Lainnya</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.jenisPerawatan && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.jenisPerawatan.message}
-                </p>
-              )}
             </div>
 
-            <div>
-              <Label htmlFor="status">
+            <div className="space-y-1.5">
+              <Label htmlFor="status" className="text-xs sm:text-sm font-medium">
                 Status <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={status}
                 onValueChange={(value: any) => setValue("status", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base sm:text-sm rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -197,80 +192,63 @@ export default function EditMaintenanceModal({
                   <SelectItem value="Terlambat">Terlambat</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.status && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.status.message}
-                </p>
-              )}
             </div>
           </div>
 
           {/* Judul */}
-          <div>
-            <Label htmlFor="judul">
+          <div className="space-y-1.5">
+            <Label htmlFor="judul" className="text-xs sm:text-sm font-medium">
               Judul Perawatan <span className="text-red-500">*</span>
             </Label>
             <Input
               id="judul"
-              placeholder="Contoh: Pemupukan area A"
+              placeholder="Pemupukan area A"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("judul")}
             />
             {errors.judul && (
-              <p className="text-sm text-red-500 mt-1">{errors.judul.message}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.judul.message}</p>
             )}
           </div>
 
           {/* Tanggal Dijadwalkan */}
-          <div>
-            <Label htmlFor="tanggalDijadwalkan">
-              Tanggal Dijadwalkan <span className="text-red-500">*</span>
+          <div className="space-y-1.5">
+            <Label htmlFor="tanggalDijadwalkan" className="text-xs sm:text-sm font-medium">
+              Tanggal <span className="text-red-500">*</span>
             </Label>
             <Input
               id="tanggalDijadwalkan"
               type="date"
-              className="h-11 md:h-10 text-base md:text-sm"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("tanggalDijadwalkan")}
             />
-            {errors.tanggalDijadwalkan && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.tanggalDijadwalkan.message}
-              </p>
-            )}
           </div>
 
           {/* Detail */}
-          <div>
-            <Label htmlFor="detail">Detail Perawatan</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="detail" className="text-xs sm:text-sm font-medium">Detail Perawatan</Label>
             <Textarea
               id="detail"
-              placeholder="Detail tambahan tentang perawatan..."
-              rows={3}
+              placeholder="Detail tambahan..."
+              rows={2}
+              className="text-base sm:text-sm rounded-xl resize-none"
               {...register("detail")}
             />
-            {errors.detail && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.detail.message}
-              </p>
-            )}
           </div>
 
           {/* Penanggung Jawab */}
-          <div>
-            <Label htmlFor="penanggungJawab">Penanggung Jawab</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="penanggungJawab" className="text-xs sm:text-sm font-medium">Penanggung Jawab</Label>
             <Input
               id="penanggungJawab"
-              placeholder="Nama penanggung jawab (opsional)"
+              placeholder="Nama penanggung jawab"
+              className="h-11 text-base sm:text-sm rounded-xl"
               {...register("penanggungJawab")}
             />
-            {errors.penanggungJawab && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.penanggungJawab.message}
-              </p>
-            )}
           </div>
 
           {/* Recurring Checkbox */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-xl">
             <Checkbox
               id="isRecurring"
               checked={isRecurring}
@@ -280,7 +258,7 @@ export default function EditMaintenanceModal({
             />
             <Label
               htmlFor="isRecurring"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-xs sm:text-sm font-medium leading-none"
             >
               Perawatan Berkala
             </Label>
@@ -288,30 +266,26 @@ export default function EditMaintenanceModal({
 
           {/* Recurring Interval - Conditional */}
           {isRecurring && (
-            <div>
-              <Label htmlFor="recurringInterval">
-                Interval Pengulangan (hari) <span className="text-red-500">*</span>
+            <div className="space-y-1.5">
+              <Label htmlFor="recurringInterval" className="text-xs sm:text-sm font-medium">
+                Interval (hari) <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="recurringInterval"
                 type="number"
                 min="1"
-                placeholder="Contoh: 30"
+                placeholder="30"
+                className="h-11 text-base sm:text-sm rounded-xl"
                 {...register("recurringInterval", { valueAsNumber: true })}
               />
-              {errors.recurringInterval && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.recurringInterval.message}
-                </p>
-              )}
             </div>
           )}
 
           {/* Foto Perawatan */}
-          <div>
-            <Label>Foto Dokumentasi (Opsional)</Label>
-            <p className="text-xs text-gray-500 mb-2">
-              Upload foto sebelum/sesudah perawatan (max 4 foto)
+          <div className="space-y-1.5">
+            <Label className="text-xs sm:text-sm font-medium">Foto Dokumentasi</Label>
+            <p className="text-[10px] sm:text-xs text-gray-500 mb-2">
+              Upload foto sebelum/sesudah (max 4 foto)
             </p>
             <MultiImageUpload
               value={photos}
@@ -321,11 +295,21 @@ export default function EditMaintenanceModal({
             />
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose}>
+          <DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleClose}
+              className="h-11 rounded-xl w-full sm:w-auto"
+            >
               Batal
             </Button>
-            <Button type="submit">Simpan Perubahan</Button>
+            <Button 
+              type="submit"
+              className="h-11 rounded-xl w-full sm:w-auto bg-green-600 hover:bg-green-700"
+            >
+              Simpan Perubahan
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

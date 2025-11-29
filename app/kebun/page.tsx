@@ -9,15 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import GardenCard from "@/components/kebun/GardenCard";
 import AddGardenModal from "@/components/kebun/AddGardenModal";
-import EditGardenModal from "@/components/kebun/EditGardenModal";
 
 export default function KebunPage() {
-  const { gardens, loading, createGarden, updateGarden, deleteGarden } = useGardens();
+  const { gardens, loading, createGarden } = useGardens();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedGarden, setSelectedGarden] = useState<Garden | null>(null);
 
   // Filter gardens
   const filteredGardens = gardens.filter((garden) => {
@@ -32,28 +29,6 @@ export default function KebunPage() {
     if (success) {
       setIsAddModalOpen(false);
     }
-  };
-
-  const handleEditGarden = async (updatedData: Omit<Garden, "id" | "createdAt" | "updatedAt">) => {
-    if (!selectedGarden) return;
-
-    const success = await updateGarden(selectedGarden.id, updatedData);
-    if (success) {
-      setIsEditModalOpen(false);
-      setSelectedGarden(null);
-    }
-  };
-
-  const handleDeleteGarden = async (id: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus kebun ini?")) {
-      await deleteGarden(id);
-    }
-  };
-
-  const openEditModal = (garden: Garden) => {
-    setSelectedGarden(garden);
-    setIsEditModalOpen(true);
-    
   };
 
   return (
@@ -147,13 +122,11 @@ export default function KebunPage() {
             <p className="text-gray-500">Tidak ada kebun yang sesuai dengan filter</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {filteredGardens.map((garden) => (
               <GardenCard
                 key={garden.id}
                 garden={garden}
-                onDelete={() => handleDeleteGarden(garden.id)}
-                onEdit={() => openEditModal(garden)}
               />
             ))}
           </div>
@@ -165,17 +138,6 @@ export default function KebunPage() {
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddGarden}
-      />
-
-      {/* Edit Garden Modal */}
-      <EditGardenModal
-        open={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false);
-          setSelectedGarden(null);
-        }}
-        onSubmit={handleEditGarden}
-        garden={selectedGarden}
       />
     </div>
   );

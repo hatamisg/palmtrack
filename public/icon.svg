@@ -1,23 +1,37 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="512" height="512" rx="128" fill="#10b981"/>
+  <rect width="512" height="512" rx="128" fill="#f5f5f5"/>
   
-  <!-- Palm Tree Icon -->
-  <g transform="translate(256, 256)">
-    <!-- Trunk -->
-    <rect x="-20" y="40" width="40" height="140" rx="8" fill="#92400e"/>
-    
-    <!-- Leaves -->
-    <!-- Left leaf -->
-    <ellipse cx="-80" cy="0" rx="100" ry="40" fill="#059669" transform="rotate(-30 -80 0)"/>
-    <!-- Right leaf -->
-    <ellipse cx="80" cy="0" rx="100" ry="40" fill="#059669" transform="rotate(30 80 0)"/>
-    <!-- Top leaf -->
-    <ellipse cx="0" cy="-60" rx="40" ry="100" fill="#10b981"/>
-    <!-- Center leaf -->
-    <ellipse cx="0" cy="20" rx="90" ry="35" fill="#059669"/>
-  </g>
+  <!-- Pocket (Saku) -->
+  <path d="M140 280 C140 260, 160 240, 180 240 L332 240 C352 240, 372 260, 372 280 L372 420 C372 440, 352 460, 332 460 L180 460 C160 460, 140 440, 140 420 Z" fill="#f4c542" stroke="#2d2d2d" stroke-width="4"/>
   
-  <!-- Text -->
-  <text x="256" y="420" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">PalmTrack</text>
+  <!-- Pocket stitching -->
+  <path d="M160 260 C160 250, 175 245, 190 245 L322 245 C337 245, 352 250, 352 260" fill="none" stroke="#2d2d2d" stroke-width="3" stroke-dasharray="8 6"/>
+  <path d="M155 420 L155 280" fill="none" stroke="#2d2d2d" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M357 420 L357 280" fill="none" stroke="#2d2d2d" stroke-width="2" stroke-dasharray="6 4"/>
+  
+  <!-- Palm Tree Trunk -->
+  <rect x="236" y="180" width="40" height="100" rx="6" fill="#8B4513" stroke="#5D3A1A" stroke-width="2"/>
+  <line x1="246" y1="190" x2="246" y2="270" stroke="#5D3A1A" stroke-width="2"/>
+  <line x1="266" y1="190" x2="266" y2="270" stroke="#5D3A1A" stroke-width="2"/>
+  
+  <!-- Palm Fruits (Sawit) -->
+  <ellipse cx="220" cy="220" rx="22" ry="26" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+  <ellipse cx="256" cy="210" rx="22" ry="26" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+  <ellipse cx="292" cy="220" rx="22" ry="26" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+  
+  <!-- Palm Leaves -->
+  <!-- Center leaf -->
+  <path d="M256 180 Q256 80, 256 60 Q270 100, 256 180" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+  <path d="M256 180 Q256 80, 256 60 Q242 100, 256 180" fill="#2ecc71" stroke="#1e8449" stroke-width="2"/>
+  
+  <!-- Left leaves -->
+  <path d="M246 170 Q160 100, 100 80 Q170 130, 246 170" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+  <path d="M246 170 Q160 100, 100 80 Q150 150, 246 170" fill="#2ecc71" stroke="#1e8449" stroke-width="2"/>
+  <path d="M240 175 Q180 140, 130 140 Q175 165, 240 175" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+  
+  <!-- Right leaves -->
+  <path d="M266 170 Q352 100, 412 80 Q342 130, 266 170" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+  <path d="M266 170 Q352 100, 412 80 Q362 150, 266 170" fill="#2ecc71" stroke="#1e8449" stroke-width="2"/>
+  <path d="M272 175 Q332 140, 382 140 Q337 165, 272 175" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
 </svg>
